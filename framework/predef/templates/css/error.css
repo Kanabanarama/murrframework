@@ -1,0 +1,51 @@
+@charset "UTF-8";
+/**
+ * @author René Lantzsch <renelantzsch@web.de>
+ * @since 10.01.2013
+ * @version 1.0.0
+ */
+
+.errorbox {
+    font-family: Arial,Helvetica,sans-serif;
+    display: block;
+    width: 800px;
+    margin: 50px auto 0 auto;
+    border: 1px solid gray;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #fcf2ec;
+    padding: 10px;
+}
+
+.errorbox .error-image {
+    float:left;
+    text-align: center;
+}
+
+.errorbox .error-type {
+    margin-top: 80px;;
+    font-size: 32px;
+}
+
+.errorbox .error-content {
+    float: left;
+    border-radius: 3px;
+    background-color: white;
+    width: 570px;
+    height: 400px;
+    margin-left: 10px;
+    padding: 10px;
+}
+
+.errorbox .error-content .error-header {
+    margin-bottom: 10px;
+}
+
+.errorbox .error-content .error-message {
+    display: block;
+}
+
+.errorbox .error-content .error-location {
+    display: block;
+    font-size: 12px;
+}

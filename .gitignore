@@ -1,0 +1,20 @@
+#######################
+#  GIT IGNORE RULES   #
+#######################
+
+# IDE generated files #
+#######################
+.idea
+.sass-cache
+private/compass/sass/compass
+
+# OS generated files  #
+#######################
+.Trashes
+.DS_Store
+.DS_Store?
+Thumbs.db
+
+# Logs                #
+#######################
+*.log

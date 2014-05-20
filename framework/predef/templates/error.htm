@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <base href="framework/predef/templates/"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>ERROR</title>
+    <link rel="stylesheet" type="text/css" href="css/default.css"/>
+    <link rel="stylesheet" type="text/css" href="css/error.css"/>
+</head>
+<body>
+<div class="errorbox">
+    <div class="error-image">
+        <img src="gfx/error.gif" width="200" height="200"/>
+        <h1 class="error-type">ERROR</h1>
+    </div>
+    <div class="error-content">
+        <div class="error-header">
+            <h2><?=$header?></h2>
+        </div>
+        <div class="error-text">
+            <span class="error-message"><?=$message?></span>
+            <span class="error-location"><?=$location?></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

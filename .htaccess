@@ -1,0 +1,11 @@
+RewriteEngine on
+
+# dotfiles (.htaccess, .git...)
+RedirectMatch 403 /\..*$
+
+# folders and files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# redirect to index
+RewriteRule ^.*$ index.php [L]

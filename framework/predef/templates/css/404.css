@@ -1,0 +1,14 @@
+@charset "UTF-8";
+/**
+ * @author René Lantzsch <renelantzsch@web.de>
+ * @since 20.05.2014
+ * @version 1.0.0
+ */
+
+.wrap-center {
+    width:421px;
+    height:488px;
+    border:1px solid gray;
+    padding: 10px;
+    margin: 100px auto 0 auto;
+}
