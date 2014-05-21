@@ -1,5 +1,6 @@
 <?php
 
+// TODO: contants into config manager?
 $root  = str_replace(DIRECTORY_SEPARATOR, '/', substr(__DIR__, 0, strpos(__DIR__, 'framework')));
 define('ROOT_DIR', $root);
 
@@ -18,18 +19,22 @@ define('PREDEF_VIEWHELPER_DIR',	ROOT_DIR . 'framework/predef/application/viewhel
 define('STATIC_DIR',		ROOT_DIR . 'framework/predef/templates/');
 define('TEMPLATE_DIR',		ROOT_DIR . 'application/templates/');
 
-require_once(__DIR__ . '/predef/config/config.php');
+/* Configuration handling */
+require_once(__DIR__ . '/Configurator.php');
+
+Configurator::loadConfiguration();
+
+/* Framework specific classes */
 require_once(__DIR__ . '/Exception.php');
 require_once(__DIR__ . '/Router.php');
 require_once(__DIR__ . '/Registry.php');
+require_once(__DIR__ . '/Autoload.php');
 
 /* Base classes */
 include MVCBASE_DIR . 'BaseModel.php';
 include MVCBASE_DIR . 'BaseController.php';
 include MVCBASE_DIR . 'BaseView.php';
 include MVCBASE_DIR . 'BaseViewhelper.php';
-
-require_once(__DIR__ . '/Autoload.php');
 
 /* DB Driver */
 include(ROOT_DIR.'framework/drivers/'._DBDRIVER.'.php');
