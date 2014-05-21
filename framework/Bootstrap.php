@@ -32,9 +32,8 @@ include MVCBASE_DIR . 'BaseViewhelper.php';
 require_once(__DIR__ . '/Autoload.php');
 
 /* DB Driver */
-include(ROOT_DIR.'framework/drivers/DB_'._DBDRIVER.'.php');
+include(ROOT_DIR.'framework/drivers/'._DBDRIVER.'.php');
 
-$db = 'DB_'._DBDRIVER;
-Registry::set('dbconnection', $db::getInstance());
+call_user_func(_DBDRIVER.'::getInstance');
 
 ?>

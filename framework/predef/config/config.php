@@ -5,7 +5,7 @@
 define('_UTF8', true);
 define('_DEBUG', true);
 
-define('_DBDRIVER', 'MYSQLI');
+define('_DBDRIVER', 'DB_MYSQLI');
 
 // mySQL Zugang
 
