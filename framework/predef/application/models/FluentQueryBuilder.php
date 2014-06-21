@@ -40,6 +40,110 @@ class FluentQueryBuilder extends BaseModel
 		}
 	}
 
+	public function save($oData) {
+		$aObjVars = get_object_vars($oData);
+
+		if(empty($aObjVars)) {
+			$strRows = 'uid';
+			$strValues = 'null';
+		} else {
+			$strRows = implode(', ', array_keys($aObjVars));
+			$strValues = '"'.implode('", "', array_values($aObjVars)).'"';
+		}
+
+		$strQuery = 'INSERT INTO '
+			.$this->strTableName
+			.' ('.$strRows.') '
+			.'VALUES'
+			.' ('.$strValues.')';
+			//.' ON DUPLICATE KEY UPDATE '
+			//.'VALUES'
+			//.' ('.$strValues.')';
+
+		if($this->DEBUG) {
+			$debugQuery = $this->oDB->formatStatement($strQuery) . '<br />';
+			echo($debugQuery);
+		}
+
+		$result = $this->oDB->oquery($strQuery);
+
+		return $result;
+	}
+
+	public function update($oUpdate) {
+		$aObjVars = get_object_vars($oUpdate);
+
+		$strUpdateFields = '';
+		$aKeys = array_keys($aObjVars);
+		$aValues = array_values($aObjVars);
+
+		$i = 0;
+		foreach($aObjVars as $strKey => $strValue) {
+			$i++;
+			$strUpdateFields .= $strKey.' = "'.$strValue.'"';
+			if($i < count($aObjVars)) { $strUpdateFields .= ', '; }
+		}
+
+		$strWhere = 'WHERE uid = '. $oUpdate->uid;
+		$this->strQuery = 'UPDATE '
+			.$this->strTableName.' '
+			.'SET '
+			.$strUpdateFields.' '
+			.$strWhere;
+
+		if($this->DEBUG) {
+			$debugQuery = $this->oDB->formatStatement($this->strQuery) . '<br />';
+			echo($debugQuery);
+		}
+
+		$result = $this->oDB->query($this->strQuery);
+
+		return $result;
+	}
+
+	public function delete($oDeletion) {
+		$strWhere = 'WHERE uid = '. $oDeletion->uid;
+		$this->strQuery = 'DELETE FROM '
+			.$this->strTableName.' '
+			.$strWhere;
+
+		if($this->DEBUG) {
+			$debugQuery = $this->oDB->formatStatement($this->strQuery) . '<br />';
+			echo($debugQuery);
+		}
+
+		$result = $this->oDB->query($this->strQuery);
+
+		return $result;
+	}
+
+	public function relate($originUid, $targetTableObject, $targetUid = null) {
+		if(!$targetTableObject instanceof self) {
+			throw new Exception('2nd parameter of relate() must be a '.get_class_name(self).' object.', 034);
+		} else {
+			if(!$targetUid) {
+				$targetUid = $targetTableObject->getLastId();
+			}
+
+			$strRows = 'mm_foreign_'.$this->getTableName().','.'mm_foreign_'.$targetTableObject->getTableName();
+			$strValues = '"'.$originUid.'", "'.$targetUid.'"';
+			$strQuery = 'INSERT INTO '
+				.$this->strTableName.'_relation_'.$targetTableObject->getTableName()
+				.' ('.$strRows.') '
+				.'VALUES'
+				.' ('.$strValues.')';
+
+			if($this->DEBUG) {
+				$debugQuery = $this->oDB->formatStatement($strQuery) . '<br />';
+				echo($debugQuery);
+			}
+
+			$result = $this->oDB->oquery($strQuery);
+		}
+
+		return $result;
+	}
+
 	public function find($mFieldValue = null, $mFieldName = 'uid') {
 		$this->aQueryStack[$this->iStackPos]['ACTION'] = 'SELECT';
 
@@ -59,7 +163,7 @@ class FluentQueryBuilder extends BaseModel
 				}
 			}
 		} else if($mFieldValue) {
-			$this->aQueryStack[$this->iStackPos]['WHERE'] = 'WHERE ' . $this->getTableName() . '.' . $mFieldName . ' = ' . $mFieldValue;
+			$this->aQueryStack[$this->iStackPos]['WHERE'] = 'WHERE ' . $this->getTableName() . '.' . $mFieldName . ' = \'' . $mFieldValue . '\'';
 		} else {
 			$this->aQueryStack[$this->iStackPos]['WHERE'] = 'WHERE 1=1';
 		}
@@ -259,21 +363,31 @@ class FluentQueryBuilder extends BaseModel
 	}
 
 	private function getRelationalObject($result) {
-		if($result && ($this->iStackPos > 0)) {
-			// Objekt nur mit Keys die diese Tabelle auch besitzt erzeugen
-			$slicedResults = array();
-			$slicedResults[0] = $this->getResultIntersectOfThisTableConfiguration($this, $result);
-			foreach($this->aJoinedTablesStack as $iJoinNum => $joinedTable) {
-				// Diese Filterung auch für die gejointen Tabellen vornehmen
-				$foreignTableKey = /*'foreign_'.*/
-					$joinedTable->getTableName();
-				$slicedResults[$foreignTableKey] = $this->getResultIntersectOfThisTableConfiguration($joinedTable, $result);
+		if($result) {
+			if($this->iStackPos > 0) {
+				// Objekt nur mit Keys die diese Tabelle auch besitzt erzeugen
+				$slicedResults = array();
+				$slicedResults[0] = $this->getResultIntersectOfThisTableConfiguration($this, $result);
+				foreach($this->aJoinedTablesStack as $iJoinNum => $joinedTable) {
+					// Diese Filterung auch für die gejointen Tabellen vornehmen
+					$foreignTableKey = /*'foreign_'.*/
+						$joinedTable->getTableName();
+					$slicedResults[$foreignTableKey] = $this->getResultIntersectOfThisTableConfiguration($joinedTable, $result);
+				}
+				// aus den nach Tabellenfeldern zerstückelten Array die Relationen zusammenbauen
+				$ormMergedResult = $this->mergeDownResults($slicedResults);
+				$ormResult = $ormMergedResult;
+			} else {
+				$uidNameForJoin = $this->getTableName().'_uid';
+				$result[0]->uid = $result[0]->$uidNameForJoin;
+				unset($result[0]->$uidNameForJoin);
+				$timeNameForJoin = $this->getTableName().'_time';
+				$result[0]->time = $result[0]->$timeNameForJoin;
+				unset($result[0]->$timeNameForJoin);
+				$ormResult = $result;
 			}
-			// aus den nach Tabellenfeldern zerstückelten Array die Relationen zusammenbauen
-			$ormMergedResult = $this->mergeDownResults($slicedResults);
-			$ormResult = (object)$ormMergedResult;
 		} else {
-			$ormResult = (object)$result;
+			$ormResult = $result;
 		}
 
 		return $ormResult;
@@ -400,6 +514,22 @@ class FluentQueryBuilder extends BaseModel
 		return $this->tableConf;
 	}
 
+	public function getLastId() {
+		return $this->oDB->get_last_id();
+	}
+
+	public $errno = array(
+		'DUPLICATE' => 1062
+	);
+
+	public function lastErrorWas($strErrorKey) {
+		$errNo = $this->oDB->get_last_errno();
+		if(isset($this->errno[$strErrorKey]) && $this->errno[$strErrorKey] === $errNo) {
+			return true;
+		}
+		return false;
+	}
+
 	public function debug($bOnOrOff = null) {
 		if(is_bool($bOnOrOff)) {
 			$this->DEBUG = $bOnOrOff;
@@ -411,7 +541,8 @@ class FluentQueryBuilder extends BaseModel
 	}
 
 	public function __call($strFuncName, $mArgs) {
-		echo($strFuncName);
+		//echo($strFuncName);
+		throw new Exception('The method "'.$strFuncName.'" is not implemented', 034);
 	}
 
 	public function __get($strIndex) {

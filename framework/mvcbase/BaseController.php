@@ -71,7 +71,10 @@ abstract class BaseController
 		// ebenso für $_POST-Daten
 		foreach ($_POST as $strKey => $mValue) {
 			if (intval(substr($strKey, 0, strlen($this->iInstanceUid))) == $this->iInstanceUid) {
-				$strCleanKey = substr($strKey, strpos($strKey, '_') + 1);
+				$strCleanKey = $strKey;
+				if(strpos($strKey, '_') !== false) {
+					$strCleanKey = substr($strKey, (strpos($strKey, '_') + 1));
+				}
 				if ($strCleanKey === 'jsondata') {
 					$aFields = explode('&', $mValue);
 					foreach ($aFields as $strField) {

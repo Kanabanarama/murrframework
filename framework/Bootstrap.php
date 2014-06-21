@@ -2,7 +2,10 @@
 
 // TODO: contants into config manager?
 $root  = str_replace(DIRECTORY_SEPARATOR, '/', substr(__DIR__, 0, strpos(__DIR__, 'framework')));
+$base = str_replace(DIRECTORY_SEPARATOR, '/', substr($root, strlen($_SERVER['DOCUMENT_ROOT'])));
 define('ROOT_DIR', $root);
+define('BASE_DIR', $base);
+define('DOMAIN', 'http://'.$_SERVER['HTTP_HOST'] . '/');
 
 define('MVCBASE_DIR',		ROOT_DIR . 'framework/mvcbase/');
 
@@ -18,6 +21,8 @@ define('PREDEF_VIEWHELPER_DIR',	ROOT_DIR . 'framework/predef/application/viewhel
 
 define('STATIC_DIR',		ROOT_DIR . 'framework/predef/templates/');
 define('TEMPLATE_DIR',		ROOT_DIR . 'application/templates/');
+
+define('LIB_DIR',		ROOT_DIR . 'framework/lib/');
 
 /* Configuration handling */
 require_once(__DIR__ . '/Configurator.php');
@@ -38,7 +43,10 @@ include MVCBASE_DIR . 'BaseViewhelper.php';
 
 /* DB Driver */
 include(ROOT_DIR.'framework/drivers/'._DBDRIVER.'.php');
+$dbInstance = call_user_func(_DBDRIVER.'::getInstance');
+Registry::set('dbconnection', $dbInstance);
 
-call_user_func(_DBDRIVER.'::getInstance');
+require_once(__DIR__ . '/Authorisation.php');
+Registry::set('authorisation', Authorisation::getInstance());
 
 ?>

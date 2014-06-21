@@ -12,7 +12,7 @@
  */
 
 function __kanoa_autoload($strClassName) {
-	$aAutoloadDirectories = array(CONTROLLER_DIR, VIEW_DIR, MODEL_DIR, PREDEF_CONTROLLER_DIR, PREDEF_VIEW_DIR, PREDEF_VIEWHELPER_DIR, PREDEF_MODEL_DIR);
+	$aAutoloadDirectories = array(CONTROLLER_DIR, VIEW_DIR, MODEL_DIR, PREDEF_CONTROLLER_DIR, PREDEF_VIEW_DIR, PREDEF_VIEWHELPER_DIR, PREDEF_MODEL_DIR, LIB_DIR);
 	$strFile = ucfirst($strClassName) . '.php';
 
 	/* Die MVC Dirs durchlaufen  */

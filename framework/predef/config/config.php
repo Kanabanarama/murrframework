@@ -6,6 +6,8 @@ define('_UTF8', true);
 define('_DEBUG', true);
 
 define('_DBDRIVER', 'DB_MYSQLI');
+define('_MAILER', 'PHPMailer');
+define('_MAILER_USE_SMTP', false);
 
 // mySQL Zugang
 

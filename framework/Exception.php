@@ -1,6 +1,10 @@
 <?php
 
 function fwErrorHandler($iErrno, $strErr, $strErrFile, $iErrLine) {
+	if (error_reporting() == 0) {
+		return; // do nothing when error_reporting is disabled
+	}
+
 	$oMockError = new stdClass();
 	$oMockError->number = $iErrno;
 	$oMockError->message = $strErr;
@@ -20,6 +24,7 @@ function renderError($oError) {
 		1 => 'ERR_TYPE_DB',
 		2 => '?',
 		3 => 'E_AUTOLOAD',
+		5 => 'E_ERR_CLASSRELATIONS',
 		8 => '?',
 		26 => '?',
 		27 => 'E_ERR_DBCHECK',
@@ -58,9 +63,10 @@ function renderError($oError) {
 		$location = 'File: ' . $oError->file . ' Line: ' . $oError->line;
 	}
 
-	$root = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__);
+	//$root = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__);
+	//$base = str_replace(DIRECTORY_SEPARATOR, '/', substr($root, strlen($_SERVER['DOCUMENT_ROOT'])));var_dump($base);
 
-	require_once($root . '/predef/templates/error.htm');
+	require_once(ROOT_DIR . 'framework/predef/templates/error.htm');
 	exit;
 }
 

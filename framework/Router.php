@@ -77,7 +77,12 @@ class Router
 			$controller = new DefaultTemplateDeliveryController($this->subject, $this->action, $this->params, $templateName);
 		}
 		if(!$controller->doNotLink || $this->isAjaxRequest()) {
-			$controller->getView()->render();
+			//var_dump($controller->getView());
+			if($controller->getView() instanceof BaseView) {
+				$controller->getView()->render();
+			} else {
+				throw new Exception("The controller must call the publish() method of a view class", 005);
+			}
 		} else {
 			Router::_404();
 		}

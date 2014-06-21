@@ -88,7 +88,12 @@ class TemplateView extends BaseView
 		if(!file_exists($strTemplateFile)) {
 			throw new Exception("Template does not exist: " . $strTemplateFile, 124);
 		}
+
+		$currentErrorReportingLevel = error_reporting();
+		error_reporting(0);
 		include($strTemplateFile); // Include the file
+		error_reporting($currentErrorReportingLevel);
+
 		$contents = ob_get_contents();
 
 		// Forms entfernen, wenn ein Widget gerendert wird

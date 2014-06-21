@@ -8,8 +8,7 @@
 
 class ExampleController extends BaseController
 {
-	public function process()
-	{
+	public function process() {
 		$page = new TemplateView('example.htm');
 		$page->publish($this);
 	}

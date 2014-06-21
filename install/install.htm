@@ -1,9 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <base href="/<?=BASE_DIR?>framework/predef/templates/"/>
+    <base href="<?=$staticdir?>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>ERROR</title>
+    <title>INSTALLATION</title>
     <link rel="stylesheet" type="text/css" href="css/default.css"/>
     <link rel="stylesheet" type="text/css" href="css/error.css"/>
 </head>
@@ -11,15 +11,16 @@
 <div class="errorbox">
     <div class="error-image">
         <img src="gfx/error.gif" width="200" height="200"/>
-        <h1 class="error-type">ERROR</h1>
+
+        <h1 class="error-type">INSTALL</h1>
     </div>
     <div class="error-content">
         <div class="error-header">
-            <h2><?=$header?></h2>
+            <h3><img src="gfx/header_install.png" width="24" height="24"/> Installation</h3>
         </div>
         <div class="error-text">
-            <span class="error-message"><?=$message?></span>
-            <span class="error-location"><?=$location?></span>
+            <span class="error-message"><?=$progress?></span>
+            <span class="error-location"></span>
         </div>
     </div>
 </div>

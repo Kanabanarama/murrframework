@@ -104,7 +104,15 @@ class DB_MYSQLI
 	}
 
 	public function get_last_id() {
-		return $this->rDbConnection->insert_id();
+		return $this->rDbConnection->insert_id;
+	}
+
+	public function get_last_error() {
+		return $this->rDbConnection->error;
+	}
+
+	public function get_last_errno() {
+		return $this->rDbConnection->errno;
 	}
 
 	public function get_query_time() {
