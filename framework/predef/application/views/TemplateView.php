@@ -84,6 +84,8 @@ class TemplateView extends BaseView
 
 		ob_start(); // Start output buffering
 
+		$contents = '';
+
 		$strTemplateFile = $this->strTemplateFile;
 		if(!file_exists($strTemplateFile)) {
 			throw new Exception("Template does not exist: " . $strTemplateFile, 124);
@@ -103,8 +105,24 @@ class TemplateView extends BaseView
 			}
 		}
 
+		//preg_match_all('/(<!--)?<value:(.+) \/>(-->)?/u', $contents, $aValueMatches);
+		/*preg_match_all('/\[(.+)\]/u', $contents, $aValueMatches);
+		foreach($aValueMatches[1] as $i => $strValueMatch) {
+			$templateMarkerValue = '';
+			//if (preg_match("/^[\$a-zA-Z0-9]+$/", $strValueMatch)) {
+			if (strpos($strValueMatch, '$') === 0) {
+				$templateMarkerValue = $this->aVars[str_replace('$', '', $strValueMatch)];
+			} else {
+				eval('$templateMarkerValue = htmlspecialchars('.$aValueMatches[1][$i].');');
+			}
+			$contents = str_replace($aValueMatches[0][$i], $templateMarkerValue, $contents);
+		}*/
+
 		// nach Viewhelpern suchen
-		preg_match_all('/(<!--)?<viewhelper[ ]?(.+)>(.+)<\/viewhelper>(-->)?/u', $contents, $aViewhelperMatches);
+		// Normal tag:
+		preg_match_all('/(<!--)?<viewhelper[ ](.+)>(.+)<\/viewhelper>(-->)?/Us', $contents, $aViewhelperMatches);
+		// Short tag:
+		//preg_match_all('/(<!--)?<viewhelper[ ]?(.+) \/>(-->)?/u', $contents, $aViewhelperMatches);
 
 		$aViewhelpers = $aViewhelperMatches[0];
 		$aViewhelperCommentedOut = $aViewhelperMatches[1];
@@ -126,7 +144,9 @@ class TemplateView extends BaseView
 					$strViewhelperClassName = $aAttributes['name'] . 'Viewhelper';
 					unset($aAttributes['name']);
 					$oViewhelper = new $strViewhelperClassName();
-					$strReplaceContent = $oViewhelper->render($aAttributes, $strTagContent);
+					//$oViewhelper->transferVariables($this->aVars);
+					$strTagContent = $oViewhelper->secureContent($strTagContent);
+					$strReplaceContent = $oViewhelper->render($strTagContent, $aAttributes);
 					$contents = str_replace($aViewhelpers[$i], $strReplaceContent, $contents);
 				} else {
 					throw new Exception('Viewhelper tag has no name.', 33);
@@ -148,7 +168,7 @@ class TemplateView extends BaseView
 		return $strString;
 	}
 
-	public function parseBBCode($strText) {
+	/*public function parseBBCode($strText) {
 		$strText = htmlspecialchars($strText);
 		$strText = preg_replace("/\[b\](.*)\[\/b\]/Usi", "<b>\\1</b>", $strText);
 		$strText = preg_replace("/\[i\](.*)\[\/i\]/Usi", "<i>\\1</i>", $strText);
@@ -158,7 +178,7 @@ class TemplateView extends BaseView
 		$strText = preg_replace("/\[email=(.*)\](.*)\[\/email\]/Usi", "<a href=\"mailto:\\1\">\\2</a>", $strText);
 		$strText = preg_replace("/\[img\](.*)\[\/img\]/Usi", '<img src="\\1">', $strText);
 		return nl2br($strText);
-	}
+	}*/
 
 	public function generateDateSelect($dateStart, $dateEnd = null, $dateSelected = null) {
 		if($dateSelected == '0000-00-00') {
@@ -205,6 +225,55 @@ class TemplateView extends BaseView
 		$strOptions .= '</select>';
 
 		return $strOptions;
+	}
+
+	public function getGenderSymbol($iGender) {
+		$genderSymbol = '-';
+		switch($iGender) {
+			case 1:
+				$genderSymbol = '♀';
+				break;
+			case 2:
+				$genderSymbol = '♂';
+				break;
+			default:
+				$genderSymbol = '-';
+				break;
+		}
+		return $genderSymbol;
+	}
+
+	public function getAgeFromDate($date) {
+		$birthday = new DateTime($date);
+		$now = new DateTime();
+		$interval = $now->diff($birthday);
+		return $interval->y;
+	}
+
+	/* country codes according to ISO 3166 */
+	// TODO: laden aus xml + lang integration
+	public function getCountryFromCode($countryCode) {
+		$countries = array(
+			'de' => 'Germany',
+			'ch' => 'Switzerland',
+			'at' => 'Austria',
+			'uk' => 'United Kingdom',
+			'us' => 'USA'
+		);
+		if(isset($countries[$countryCode])) {
+			$countryCode = $countries[$countryCode];
+		} else {
+			throw new Exception('A country for iso code "'.$countryCode.'" is missing.', 7);
+		}
+
+		return $countryCode;
+	}
+
+	public function getDateLocalized($strDate) {
+		$date = new DateTime($strDate);
+		$localizedDate = $date->format('d.m.Y');
+
+		return $localizedDate;
 	}
 }
 

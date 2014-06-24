@@ -63,7 +63,7 @@ class DB_MYSQLI
 		}
 
 		if($result === false) {
-			var_dump('ERROR: '.$statement);
+			echo('ERROR: '.$this->formatStatement($statement));
 		}
 
 		if(($result) && (!empty($result))) { return $result; }

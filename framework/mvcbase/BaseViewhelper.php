@@ -10,7 +10,20 @@
 
 abstract class BaseViewhelper
 {
-	abstract public function render($aAttributes, $strContent);
+	abstract public function render($strTagContent, $aAttributes);
+
+	public function secureContent($strContent) {
+		$content = htmlspecialchars($strContent);
+
+		return $content;
+	}
+
+	public function transferVariables($aViewVars) {
+		if(is_array($aViewVars)) {
+			extract($aViewVars); // Extract the vars to local namespace
+		}
+		return;
+	}
 }
 
 ?>

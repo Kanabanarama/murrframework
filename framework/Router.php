@@ -88,11 +88,11 @@ class Router
 		}
 	}
 
-	/*public function go($strLocation) {
+	public static function go($strLocation) {
 		if(!self::$bProhibitRouting) {
-			header('Location: ' . $strLocation);
+			header('Location: /' . BASE_DIR . trim($strLocation, '/'));
 		}
-	}*/
+	}
 
 	public static function _404() {
 		if(!self::$bProhibitRouting) {

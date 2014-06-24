@@ -33,7 +33,7 @@ class Authorisation
 	function login($name, $password) {
 		$strQuery = sprintf("SELECT uid, username, email
     						FROM %s
-    						WHERE (username='%s' OR email='%s') AND password=MD5('booksalt_%s')
+    						WHERE (username='%s' OR email='%s') AND password=MD5('booksalt_%s') AND active = 1
     						LIMIT 1",
 			TBL_USER,
 			$this->oDB->escape($name),

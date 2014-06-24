@@ -31,6 +31,10 @@ abstract class BaseController
 	protected $oView;
 	protected $oModel;
 
+	protected $section;
+	protected $messages;
+	protected $errors;
+
 	private static $iInstanceCounter = 0;
 	public $iInstanceUid;
 
@@ -53,6 +57,8 @@ abstract class BaseController
 		$this->strSubject = $strSubject;
 		$this->strAction = $strAction;
 		$this->aParams = $aParams;
+
+		$this->section = 'section1';    // start with template section 1 by default
 
 		// TODO: prüfen ob mehrere gleichartige Controller angelegt werden
 		$this->iInstanceUid = self::$iInstanceCounter++;
