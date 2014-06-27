@@ -49,3 +49,20 @@
     display: block;
     font-size: 12px;
 }
+
+.wrap-404 {
+    padding: 50px;
+}
+
+h1 { font-size: 20px; }
+h2 { font-size: 18px; }
+h3 { font-size: 16px; }
+h4 { font-size: 14px; }
+h5 { font-size: 12px; }
+h6 { font-size: 11px; }
+
+.image-404 {
+    display: block;
+    width: 66px;
+    margin: 50px auto;
+}

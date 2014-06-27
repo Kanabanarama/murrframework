@@ -14,7 +14,7 @@
 
 abstract class Registry
 {
-	private static $vars = array();
+	private static $vars = array('controllers' => array());
 
 	public static function set($index, $value) {
 		self::$vars[$index] = $value;

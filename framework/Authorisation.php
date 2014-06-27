@@ -16,13 +16,11 @@ class Authorisation
 	private $oDB;
 	private $aVars;
 
-	function __construct() {
+	public function __construct() {
 		$this->oDB = Registry::get('dbconnection');
 		//if(!isset($_SESSION)){
 			session_start();
-		//	var_dump('session started');
 		//}
-
 	}
 
 	public static function getInstance() {
@@ -52,8 +50,73 @@ class Authorisation
 		}
 	}
 
-	function is_logged_in() {
-		$strQuery = sprintf("SELECT uid, email
+
+
+
+	private function importFacebookAccount($email, $username) {
+		$error = '';
+
+		$usertable = new FluentQueryBuilder(TBL_USER);
+
+		$NEWUSER = new stdClass();
+		$NEWUSER->username  = $username;
+		$NEWUSER->email		= $email;
+		$NEWUSER->created	= date('Y.m.d H:i:s');
+		$NEWUSER->active    = 1;
+
+		$result = $usertable->save($NEWUSER);
+
+		$userId = $usertable->getLastId();
+
+		if($result != true) {
+			if($usertable->lastErrorWas('DUPLICATE')) {
+				$error = 'mailexists';
+			} else {
+				$error = 'creationfailed';
+			}
+		}
+
+		$profiletable = new FluentQueryBuilder(TBL_PROFILE);
+		$NEWPROFILE = new stdClass();
+		$result = $profiletable->relate($userId, $usertable)->save($NEWPROFILE);
+
+		return $result;
+	}
+
+	private function findFacebookAccount($email) {
+		$strQuery = sprintf("SELECT uid, username, email
+    						FROM %s
+    						WHERE email='%s'
+    						LIMIT 1",
+			TBL_USER,
+			$this->oDB->escape($email));
+
+		$result = $this->oDB->query($strQuery);
+
+		return $result;
+	}
+
+	public function loginFacebook($email, $username) {
+		$account = $this->findFacebookAccount($email);
+		if(count($account) == 1) {
+			$this->uid = $account[0]['uid'];
+			$this->email = $account[0]['email'];
+			$this->updateSession();
+			return true;
+		} else {
+			$this->importFacebookAccount($email, $username);
+			$account2 = $this->findFacebookAccount($email);
+			if(count($account2) == 1) {
+				return true;
+			} else {
+				return false;
+			}
+
+		}
+	}
+
+	public function is_logged_in() {
+		$strQuery = sprintf("SELECT uid, email, username
 							FROM %s
 							WHERE session = '%s'
 							LIMIT 1",
@@ -63,12 +126,13 @@ class Authorisation
 		$result = $this->oDB->query($strQuery);
 
 		$this->uid = $result[0]['uid'];
+		$this->username = $result[0]['username'];
 		$this->email = $result[0]['email'];
 
 		return (count($result) == 1);
 	}
 
-	function get_rights() {
+	public function get_rights() {
 		$strQuery = sprintf("SELECT privileges
 							FROM %s
 							WHERE session = '%s'
@@ -102,6 +166,7 @@ class Authorisation
 		}
 
 		// Session löschen.
+		//$_SESSION = array();
 		session_destroy();
 	}
 

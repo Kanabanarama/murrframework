@@ -42,8 +42,8 @@ abstract class BaseController
 	public $GET;
 	public $FILES;
 
-	public function __construct($strSubject = null, $strAction = null, $aParams = null)
-	{
+	public function __construct($strSubject = null, $strAction = null, $aParams = null)	{
+		//var_dump(get_class($this), $this->isSingleton);
 		// Wenn die Klasse schon existiert aber Singleton-Flag hat (z.B. Menü), nicht nochmal instanzieren!
 		if ($this->isSingleton && Registry::has('controllers', get_class($this))) {
 			$this->bIsValid = false; // TODO: do things with this
@@ -103,8 +103,22 @@ abstract class BaseController
 
 		$this->bIsValid = true;
 
+
+
 		try {
+			//$this->setPreProcessor();
 			$this->process();
+			// Post processor:
+			if(is_file(CONTROLLER_DIR.'/PostProcessor.php')) {
+				$postProcessor = new PostProcessor();
+				$postProcessor->process();
+				$postVars = $postProcessor->getViewVars();
+				if(count($postVars)) {
+					$this->getView()->setAll($postVars);
+					//var_dump('set post');
+				}
+			}
+			//$this->setPostProcessor();
 		} catch(Exception $e) {
 			renderError($e);
 		}
@@ -114,8 +128,6 @@ abstract class BaseController
 	 * process()
 	 *
 	 * Define this class in your controller and let it do everything regarding your page
-
-
 	 * @return void
 	 */
 	abstract public function process();
@@ -124,8 +136,6 @@ abstract class BaseController
 	 * getView()
 	 *
 	 * Returns the View assigned to your Controller
-
-
 	 * @return object $oView
 	 */
 	public function getView() {
@@ -136,15 +146,20 @@ abstract class BaseController
 	 * setView()
 	 *
 	 * Assigns a View to your Controller
-
-
 	 * @param object $oView
 	 * @return void
 	 */
 	public function setView($oView) {
 		$this->oView = $oView;
+		// if predefined view vars exist, merge them with the views controller defined vars
+		/*if(count($this->predefinedViewVars) > 0) {
+			$this->oView->setAll($this->predefinedViewVars);
+		}*/
 	}
 
+	/*public function setPredefinedViewVars($predefinedVars) {
+		$this->predefinedViewVars = $predefinedVars;
+	}*/
 
 	public function setInstanceCounter($iCount) {
 		$this->iInstanceCounter = $iCount;

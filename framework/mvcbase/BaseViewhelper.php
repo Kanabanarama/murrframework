@@ -17,13 +17,6 @@ abstract class BaseViewhelper
 
 		return $content;
 	}
-
-	public function transferVariables($aViewVars) {
-		if(is_array($aViewVars)) {
-			extract($aViewVars); // Extract the vars to local namespace
-		}
-		return;
-	}
 }
 
 ?>

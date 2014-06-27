@@ -77,7 +77,6 @@ class Router
 			$controller = new DefaultTemplateDeliveryController($this->subject, $this->action, $this->params, $templateName);
 		}
 		if(!$controller->doNotLink || $this->isAjaxRequest()) {
-			//var_dump($controller->getView());
 			if($controller->getView() instanceof BaseView) {
 				$controller->getView()->render();
 			} else {
@@ -89,7 +88,9 @@ class Router
 	}
 
 	public static function go($strLocation) {
-		if(!self::$bProhibitRouting) {
+		if(strpos($strLocation, 'http://') === 0 || strpos($strLocation, 'https://') === 0) {
+			header('Location: ' . $strLocation);
+		} else if(!self::$bProhibitRouting) {
 			header('Location: /' . BASE_DIR . trim($strLocation, '/'));
 		}
 	}
@@ -100,11 +101,11 @@ class Router
 		}
 	}
 
-	/*public static function isAjaxRequest() {
+	public static function isAjaxRequest() {
 		return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest");
 	}
 
-	public static function prohibitRouting() {
+	/*public static function prohibitRouting() {
 		self::$bProhibitRouting = true;
 	}
 

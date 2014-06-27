@@ -8,7 +8,7 @@ class TemplateView extends BaseView
 {
 	private static $bBindInPage;
 	private static $bTemplateWrapped = false;
-	private $aVars; /// Holds all the template variables
+	private $aVars = array(); /// Holds all the template variables
 	private static $aWidgets; // Widgets (müssen überall erreichbar sein)
 	private $strTemplateFile;
 
@@ -48,6 +48,10 @@ class TemplateView extends BaseView
 		}
 	}
 
+	public function setAll($aVars) {
+		$this->aVars = array_merge($this->aVars, $aVars);
+	}
+
 	public function publish($objCallingController) {
 		$this->controller = $objCallingController;
 		if($objCallingController->ajaxify == 1) {
@@ -59,6 +63,7 @@ class TemplateView extends BaseView
 	public function render() {
 		if((self::$bBindInPage) && (!self::$bTemplateWrapped)) {
 			$template = new self('standardpage.htm');
+			$template->setAll($this->aVars);
 			self::$bTemplateWrapped = true;
 			// TODO: hier noch eine instance uid setzen?
 			$template->set('content', $this->fetch());
@@ -124,6 +129,8 @@ class TemplateView extends BaseView
 		// Short tag:
 		//preg_match_all('/(<!--)?<viewhelper[ ]?(.+) \/>(-->)?/u', $contents, $aViewhelperMatches);
 
+		//var_dump($aViewhelperMatches);die;
+
 		$aViewhelpers = $aViewhelperMatches[0];
 		$aViewhelperCommentedOut = $aViewhelperMatches[1];
 		$aViewhelperAttributes = $aViewhelperMatches[2];
@@ -145,7 +152,9 @@ class TemplateView extends BaseView
 					unset($aAttributes['name']);
 					$oViewhelper = new $strViewhelperClassName();
 					//$oViewhelper->transferVariables($this->aVars);
-					$strTagContent = $oViewhelper->secureContent($strTagContent);
+					if(!isset($aAttributes['escape']) && $aAttributes['escape'] != 1) {
+						$strTagContent = $oViewhelper->secureContent($strTagContent);
+					}
 					$strReplaceContent = $oViewhelper->render($strTagContent, $aAttributes);
 					$contents = str_replace($aViewhelpers[$i], $strReplaceContent, $contents);
 				} else {
@@ -244,6 +253,7 @@ class TemplateView extends BaseView
 	}
 
 	public function getAgeFromDate($date) {
+		if($date === '0000-00-00') { return '-'; }
 		$birthday = new DateTime($date);
 		$now = new DateTime();
 		$interval = $now->diff($birthday);
@@ -253,6 +263,7 @@ class TemplateView extends BaseView
 	/* country codes according to ISO 3166 */
 	// TODO: laden aus xml + lang integration
 	public function getCountryFromCode($countryCode) {
+		if($countryCode === '') { return '-'; }
 		$countries = array(
 			'de' => 'Germany',
 			'ch' => 'Switzerland',
