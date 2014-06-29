@@ -80,6 +80,10 @@ class TemplateView extends BaseView
 	 */
 	public function fetch() {
 		if(is_array($this->aVars)) {
+			//$this->aVars['section'] = $this->controller->section;
+			$this->aVars['messages'] = (count($this->aVars['messages'])) ? ('<span class="message">'.implode('</span><span class="message">', $this->aVars['messages']).'</span>') : '';
+			$this->aVars['errors'] = (count($this->aVars['errors'])) ? ('<span class="error">'.implode('</span><span class="error">', $this->aVars['errors']).'</span>') : '';
+
 			extract($this->aVars); // Extract the vars to local namespace
 		}
 
@@ -125,7 +129,7 @@ class TemplateView extends BaseView
 
 		// nach Viewhelpern suchen
 		// Normal tag:
-		preg_match_all('/(<!--)?<viewhelper[ ](.+)>(.+)<\/viewhelper>(-->)?/Us', $contents, $aViewhelperMatches);
+		preg_match_all('/(<!--)?<viewhelper[ ](.+)>(.*)<\/viewhelper>(-->)?/Us', $contents, $aViewhelperMatches);
 		// Short tag:
 		//preg_match_all('/(<!--)?<viewhelper[ ]?(.+) \/>(-->)?/u', $contents, $aViewhelperMatches);
 
@@ -152,10 +156,10 @@ class TemplateView extends BaseView
 					unset($aAttributes['name']);
 					$oViewhelper = new $strViewhelperClassName();
 					//$oViewhelper->transferVariables($this->aVars);
-					if(!isset($aAttributes['escape']) && $aAttributes['escape'] != 1) {
+					$strReplaceContent = $oViewhelper->render($strTagContent, $aAttributes);
+					if(!isset($aAttributes['escape']) || $aAttributes['escape'] != 0) {
 						$strTagContent = $oViewhelper->secureContent($strTagContent);
 					}
-					$strReplaceContent = $oViewhelper->render($strTagContent, $aAttributes);
 					$contents = str_replace($aViewhelpers[$i], $strReplaceContent, $contents);
 				} else {
 					throw new Exception('Viewhelper tag has no name.', 33);
@@ -167,6 +171,15 @@ class TemplateView extends BaseView
 
 		return $contents;
 	}
+
+
+
+
+
+
+
+
+
 
 	// TODO: fillContent Funktion in die man das HTML schreiben kann statt eine Template File zum auslesen anzugeben
 

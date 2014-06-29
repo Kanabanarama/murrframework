@@ -34,7 +34,7 @@ class FluentQueryBuilder extends BaseModel
 
 			$tables = Registry::get('tables');
 
-			if($tables[$strTableName]) {
+			if(isset($tables[$strTableName])) {
 				$this->tableConf = $tables[$strTableName];
 			} else {
 				throw new Exception('table configuration array is missing information for ' . $strTableName, 40);
@@ -42,7 +42,7 @@ class FluentQueryBuilder extends BaseModel
 		}
 	}
 
-	public function save($oData) {
+	public function save($oData, $bDistinct = false) {
 		$aObjVars = get_object_vars($oData);
 
 		// Falls vorher in der Kette eine Relation für den zu speichernden Datensatz definiert wurde
@@ -61,7 +61,13 @@ class FluentQueryBuilder extends BaseModel
 			$strValues = '"'.implode('", "', array_values($aObjVars)).'"';
 		}
 
-		$strQuery = 'INSERT INTO '
+		if($bDistinct) {
+			$strAction = 'INSERT IGNORE INTO ';
+		} else {
+			$strAction = 'INSERT INTO ';
+		}
+
+		$strQuery = $strAction
 			.$this->strTableName
 			.' ('.$strRows.') '
 			.'VALUES'
@@ -98,7 +104,7 @@ class FluentQueryBuilder extends BaseModel
 		$i = 0;
 		foreach($aObjVars as $strKey => $strValue) {
 			$i++;
-			$strUpdateFields .= $strKey.' = "'.$strValue.'"';
+			$strUpdateFields .= $this->escape($strKey).' = "'.$this->escape($strValue).'"';
 			if($i < count($aObjVars)) { $strUpdateFields .= ', '; }
 		}
 
@@ -231,6 +237,8 @@ class FluentQueryBuilder extends BaseModel
 	}*/
 
 	public function joinOne($mTable) {
+		$this->iStackPos++;
+
 		$this->joinMore($mTable);
 		$this->aQueryStack[$this->iStackPos]['LIMIT'] = 'LIMIT 1';
 
@@ -239,7 +247,7 @@ class FluentQueryBuilder extends BaseModel
 
 	public function joinMore($mTable) {
 		if(get_class($mTable) == get_class($this)) {
-
+			//var_dump($this->aQueryStack[$this->iStackPos]);
 			$lastJoinedTable = $this->aQueryStack[$this->iStackPos]['TABLENAME'];
 			$tableNameForJoin = $mTable->getTableName();
 			$foreignFieldNameForJoin = 'parent_' . $lastJoinedTable;
@@ -265,6 +273,38 @@ class FluentQueryBuilder extends BaseModel
 
 			$fieldNameForJoin = $this->getTableName() . '.uid';
 			$this->aQueryStack[$this->iStackPos]['ON'] = 'ON (' . $fieldNameForJoin . ' = ' . $foreignFieldNameWithTableForJoin . ')';
+		}
+
+		return $this;
+	}
+
+	public function joinBy($fieldName, $mTable) {
+		if(get_class($mTable) == get_class($this)) {
+			$lastJoinedTable = $this->aQueryStack[$this->iStackPos]['TABLENAME'];
+
+			$tableNameForJoin = $mTable->getTableName();
+			$ownFieldNameWithTableForJoin = $lastJoinedTable . '.' . $fieldName;
+
+			// Prüfen ob überhaupt das nötige Relationsfeld existiert
+			/*if(!in_array($ownFieldNameWithTableForJoin, $this->getTableConf())) {
+				throw new Exception('Can\'t join, the field ' . $ownFieldNameWithTableForJoin . ' is missing', 40);
+			}*/
+
+			$this->iStackPos++;
+			$this->aJoinedTablesStack[$this->iStackPos] = $mTable;
+			$this->aQueryStack[$this->iStackPos]['JOINBYFIELD'] = $ownFieldNameWithTableForJoin;
+			$this->aQueryStack[$this->iStackPos]['TABLENAME'] = $mTable->strTableName;
+
+			$uidChanger = $tableNameForJoin . '.uid AS ' . $tableNameForJoin . '_uid, ';
+			$updatedChanger = $tableNameForJoin . '.updated AS ' . $tableNameForJoin . '_updated, ';
+			$createdChanger = $tableNameForJoin . '.created AS ' . $tableNameForJoin . '_created, ';
+
+			$this->aQueryStack[$this->iStackPos]['WHAT'] = $uidChanger . $updatedChanger . $updatedChanger . $tableNameForJoin . '.*';
+			$this->aQueryStack[$this->iStackPos]['JOIN'] = 'LEFT JOIN ' . $tableNameForJoin;
+			$this->aQueryStack[$this->iStackPos]['JOINTABLE'] = $tableNameForJoin;
+
+			$fieldNameForJoin = $mTable->getTableName() . '.uid';
+			$this->aQueryStack[$this->iStackPos]['ON'] = 'ON (' . $ownFieldNameWithTableForJoin . ' = ' . $fieldNameForJoin . ')';
 		}
 
 		return $this;
@@ -444,10 +484,16 @@ class FluentQueryBuilder extends BaseModel
 
 	private function mergeDownResults(&$aResults) {
 		// awesome magic comes here.
-		//var_dump($aResults);die;
+		//var_dump($this->aQueryStack);
 		// search other results for parent_xyz and append them to results[0]
+		$iProcessedStacks = 0;
+		$iCurrentResultSetUid = 0;
 		foreach($aResults as $mTable => $oResultSet) {
 			foreach($oResultSet as $iKey => $oSingleResult) {
+
+				//var_dump($oSingleResult);
+				$iCurrentResultSetUid = intval($oSingleResult->uid);
+
 				$bRelationWasMerged = false;
 				/*foreach($oSingleResult as $strKey => $mValue) {
 					if(strpos($strKey, 'foreign_') === 0) {
@@ -468,6 +514,39 @@ class FluentQueryBuilder extends BaseModel
 				if($mTable === 0) {
 					continue;
 				}
+
+
+
+
+
+				if(isset($this->aQueryStack[$iProcessedStacks]['JOINBYFIELD'])) {
+					//var_dump($this->aQueryStack[$iProcessedStacks+1]['JOINBYFIELD']);
+					//var_dump($this->aQueryStack[$iProcessedStacks],$oSingleResult);
+					//var_dump(':::::::', $aResults[0][$iKey], $this->aQueryStack[$iProcessedStacks]);
+					$joinByField = explode('.', $this->aQueryStack[$iProcessedStacks]['JOINBYFIELD']);
+					$parentJoinKey = $joinByField[0];
+					$parentJoinField = $joinByField[1];
+
+					var_dump($iCurrentResultSetUid, $iProcessedStacks-1, $iKey, $mTable);
+					//var_dump($this->aQueryStack[$iProcessedStacks]['JOINBYFIELD'], $aResults[0][$iProcessedStacks-1], $iProcessedStacks, $oSingleResult, '_______________');
+
+
+					foreach($aResults[0][$iProcessedStacks-1]->$parentJoinKey as $i => $parentNode) {
+						if($parentNode->$parentJoinField == $oSingleResult->uid) {
+							//$parentNode->$parentJoinField = $oSingleResult->uid;
+							$aResults[0][$iProcessedStacks-1]->{$parentJoinKey}[$i]->$parentJoinField = $oSingleResult;
+							unset($oResultSet[$iKey]);
+
+							//var_dump($aResults[0][$iProcessedStacks-1]->{$parentJoinKey}[$i]->$parentJoinField);
+						}
+					}
+
+				}
+				if(!count($oResultSet)) {
+					$bRelationWasMerged = true;
+				}
+
+
 				// attach to parents if parent_xyz key is present
 				$strParentKey = 'parent_' . $this->strTableName;
 				if(isset($oSingleResult->$strParentKey)) {
@@ -487,10 +566,13 @@ class FluentQueryBuilder extends BaseModel
 					$bRelationWasMerged = true;
 				}
 			}
+
+			$iProcessedStacks++;
+
 			// Falls hier noch kein merging stattfand, muss die relation durch mm-Tabelle zustandegekommen sein..
-			if($mTable !== 0 && !$bRelationWasMerged) {
-				current($aResults[0])->$mTable[$oResultSet->uid] = $oResultSet;
-			}
+			///if($mTable !== 0 && !$bRelationWasMerged) {
+			//	current($aResults[0])->$mTable[$oResultSet->uid] = $oResultSet;
+			///}
 		}
 
 		return ($aResults[0]);
@@ -602,6 +684,8 @@ class FluentQueryBuilder extends BaseModel
 		} else {
 			throw new Exception('debug only accepts boolean', 034);
 		}
+
+		return $this;
 	}
 
 	public function __call($strFuncName, $mArgs) {

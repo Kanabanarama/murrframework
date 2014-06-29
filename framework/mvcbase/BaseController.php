@@ -95,9 +95,11 @@ abstract class BaseController
 
 		// und für hochgeladene Dateien
 		foreach($_FILES as $strKey => $mValue) {
-			if(intval(substr($strKey, 0, strlen($this->iInstanceUid))) == $this->iInstanceUid) {
+			if(substr($strKey, 0, strlen($this->iInstanceUid)) === $this->iInstanceUid) {
 				$strCleanKey = substr($strKey, strpos($strKey, '_ ' )+1);
 				$this->FILES[$strCleanKey] = $mValue;
+			} else {
+				$this->FILES[$strKey] = $mValue;
 			}
 		}
 
@@ -112,6 +114,9 @@ abstract class BaseController
 			if(is_file(CONTROLLER_DIR.'/PostProcessor.php')) {
 				$postProcessor = new PostProcessor();
 				$postProcessor->process();
+				$this->getView()->set('section', $this->section);
+				$this->getView()->set('messages', $this->messages);
+				$this->getView()->set('errors', $this->errors);
 				$postVars = $postProcessor->getViewVars();
 				if(count($postVars)) {
 					$this->getView()->setAll($postVars);

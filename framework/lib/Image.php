@@ -21,35 +21,30 @@ class Image
 
 	private $source_img;
 	private $img;
+	private $path;
 	private $url;
 	private $tag;
 
-	public function __construct($aFile, $iWidth = 150, $iHeight = 150, $oImageBeyond = null, $strFolder = null)
-	{
+	public function __construct($aFile, $iWidth = 150, $iHeight = 150, $oImageBeyond = null, $strFolder = null) {
 		$this->aFileTypes = array(
 			'jpg' => 'image/jpeg',
 			'png' => 'image/png',
 			'gif' => 'image/gif'
 		);
-
 		if($aFile) {
-
 			$aImageInfo = GetImageSize($aFile);
-
 			if($aImageInfo) {
-
 				$this->aSourceImage['path'] = $aFile;
 				$this->aSourceImage['mime'] = $aImageInfo['mime'];
 				$this->aSourceImage['width'] = $aImageInfo[0];
 				$this->aSourceImage['height'] = $aImageInfo[1];
 
 				if(in_array($this->aSourceImage['mime'], $this->aFileTypes)) {
-
 					$this->iImageWidth	= $iWidth;
 					$this->iImageHeight	= $iHeight;
-
 					$strNewFilename = md5(uniqid(rand(),true)) .'.png';
-					$this->url = PUBLIC_DIR . 'upload/images/'. (($strFolder) ? $strFolder.'/' : '') . $strNewFilename;
+					$this->url = 'uploads/images/'. (($strFolder) ? $strFolder.'/' : '') . $strNewFilename;
+					$this->path = 'application/'.$this->url;
 					$this->tag = '<img src="'.$this->url.'" width="'.$this->iImageWidth.'" height="'.$this->iImageHeight.'">';
 
 					if(($this->aSourceImage['width'] <= $this->iImageWidth) && ($this->aSourceImage['height'] <= $this->iImageHeight)) {
@@ -60,9 +55,6 @@ class Image
 
 					if($oImageBeyond instanceof self) { //$this->overlay = $oImageBeyond->img; }
 						$this->overlay = $oImageBeyond->__get('img');
-						//var_dump($this->overlay);
-						//$overlay = $oImageBeyond->__get('img');
-						//echo('_');
 					}
 				} else { trigger_error("No valid image type", E_USER_NOTICE); }
 			}  else { trigger_error("No valid image", E_USER_NOTICE); }
@@ -71,15 +63,13 @@ class Image
 		return false;
 	}
 
-	private function uploadImage()
-	{
+	private function uploadImage() {
 		$strTempFile = $this->aSourceImage['path'];
 		//var_dump($strTempFile);
-		move_uploaded_file($strTempFile, $this->url);
+		move_uploaded_file($strTempFile, $this->path);
 	}
 
-	private function loadImage()
-	{
+	private function loadImage() {
 		$strTempFile = $this->aSourceImage['path'];
 
 		switch($this->aSourceImage['mime']) {
@@ -113,8 +103,7 @@ class Image
     } */
 
 
-	private function resizeImage()
-	{
+	private function resizeImage() {
 		//imagedestroy($this->img);
 
 		$this->img = imagecreatetruecolor($this->iImageWidth, $this->iImageHeight);
@@ -161,8 +150,7 @@ class Image
 		//	}
 	}
 
-	public function renderOverlay()
-	{
+	public function renderOverlay() {
 		//imagealphablending($this->overlay, false);
 		//imageSaveAlpha($this->overlay, true);
 		/*header("Content-type: image/png");
@@ -189,9 +177,8 @@ class Image
 		imagecopy($this->img, $this->overlay, 0, 0, 0, 0, 150, 150); // $this->overlay->getWidth(), $this->overlay->getHeight);
 	}
 
-	public function saveImage()
-	{
-		imagepng($this->img, $this->url);
+	public function saveImage() {
+		imagepng($this->img, $this->path);
 	}
 
 
@@ -213,28 +200,23 @@ class Image
 		return $this->img;
 	}*/
 
-	public function getWidth()
-	{
+	public function getWidth() {
 		return $this->iImageWidth;
 	}
 
-	public function getHeight()
-	{
+	public function getHeight() {
 		return $this->iImageHeight;
 	}
 
-	public function getSourceWidth()
-	{
+	public function getSourceWidth() {
 		return $this->aSourceImage['width'];
 	}
 
-	public function getSourceHeight()
-	{
+	public function getSourceHeight() {
 		return $this->aSourceImage['height'];
 	}
 
-	public function __get($strKey)
-	{
+	public function __get($strKey) {
 		//var_dump($strKey);
 
 		switch($strKey) {
@@ -254,7 +236,6 @@ class Image
 				} else {
 					$this->uploadImage();
 				}
-
 
 				/*if($this->bSourceImageTooBig) {
 					$this->loadImage();
