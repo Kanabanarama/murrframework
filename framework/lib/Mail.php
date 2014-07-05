@@ -24,7 +24,11 @@ class Mail
 	}
 
 	public function setFrom($sender) {
-		$this->sender = $sender;
+		if(is_array($sender)) {
+			$this->sender = $sender;
+		} else {
+			$this->sender = array($sender, null);
+		}
 	}
 
 	public function setSubject($subject) {

@@ -96,7 +96,9 @@ class Authorisation
 		return $result;
 	}
 
-	public function loginFacebook($email, $username) {
+	public function loginFacebook($facebookProfile) {
+		$email = $facebookProfile['email'];
+		$username = $facebookProfile['username'];
 		$account = $this->findFacebookAccount($email);
 		if(count($account) == 1) {
 			$this->uid = $account[0]['uid'];
@@ -107,6 +109,9 @@ class Authorisation
 			$this->importFacebookAccount($email, $username);
 			$account2 = $this->findFacebookAccount($email);
 			if(count($account2) == 1) {
+				$this->uid = $account[0]['uid'];
+				$this->email = $account[0]['email'];
+				$this->updateSession();
 				return true;
 			} else {
 				return false;
@@ -178,7 +183,6 @@ class Authorisation
 			$this->oDB->escape(session_id()),
 			$_SERVER['REMOTE_ADDR'],
 			$this->oDB->escape($this->uid));
-
 		$this->oDB->query($strQuery);
 	}
 

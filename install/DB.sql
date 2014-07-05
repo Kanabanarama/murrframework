@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `username` char(50) NOT NULL,
   `password` char(50) NOT NULL,
+  `origin` char(20) default NULL,
   `active` tinyint(1) default '0',
   `privileges` tinyint(2) default '-1',
   `session` char(50) default NULL,
@@ -83,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `content` (
   `created` timestamp NULL default NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `title` char(50) NOT NULL,
-  `content` char(50) NOT NULL,
+  `content` text NOT NULL,
   `userlevel` int(11) unsigned NULL,
   `parent_user` int(11) unsigned NOT NULL,
   `foreign_tag` VARCHAR( 255 ) DEFAULT NULL,
@@ -114,13 +115,24 @@ CREATE TABLE IF NOT EXISTS `news` (
   `created` timestamp NULL default NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `title` char(50) NOT NULL,
-  `content` char(50) NOT NULL,
-  `userlevel` int(11) unsigned NULL,
+  `content` NOT NULL,
   `parent_user` int(11) unsigned NOT NULL,
-  `publication_date` datetime DEFAULT NULL,
+  `publication_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY  (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
+CREATE TABLE IF NOT EXISTS `news_image` (
+  `uid` int(11) unsigned NOT NULL auto_increment,
+  `created` timestamp NULL default NULL,
+  `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `parent_news` int(11) NOT NULL,
+  `title` char(50) NOT NULL,
+  `alt` NOT NULL
+  `description` NOT NULL
+  `image` char(50) NOT NULL,
+  `position` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`uid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 CREATE TABLE IF NOT EXISTS `author` (
@@ -156,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `bookedition` (
   `uid` int(11) unsigned NOT NULL auto_increment,
   `created` timestamp NULL default NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `parent_book` int(11) unsigned NOT NULL,
+  `parent_booktitle` int(11) unsigned NOT NULL,
   `language` tinytext NOT NULL,
   `format` int(11) unsigned NULL,
   `pages` mediumint(9) NOT NULL,
@@ -181,8 +193,9 @@ CREATE TABLE IF NOT EXISTS `booklist_entry` (
   `uid` int(11) unsigned NOT NULL auto_increment,
   `created` timestamp NULL default NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `parent_booklist` int(4) NOT NULL,
-  `booktitle` int(4) NOT NULL,
+  `parent_booklist` int(11) NOT NULL,
+  `booktitle` int(11) NOT NULL,
+  `bookedition` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL,
   `progress` smallint(6) NULL,
   `score` tinyint(4) NULL,

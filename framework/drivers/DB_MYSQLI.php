@@ -17,6 +17,11 @@ class DB_MYSQLI
 			throw new Exception('Could not connect to database.', 1);
 		}
 
+		/* change character set to utf8 */
+		if (!$this->rDbConnection->set_charset("utf8")) {
+			throw new Exception('Could not set character set utf8. ('.$this->rDbConnection->error.')', 1);
+		}
+
 		$bSelectResult = $this->selectDb();
 		/*if(!$bSelectResult) {
 			throw new Exception('Database could not be selected.', 1);
