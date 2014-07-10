@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * FluentQueryBuilder
+ * Murrmurr framework
+ *
+ * builds mysql queries by method chaining
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @version 3.1.4
+ */
+
 class FluentQueryBuilder extends BaseModel
 {
 	private $aVars = array();

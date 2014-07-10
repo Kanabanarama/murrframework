@@ -1,9 +1,14 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: Kana
- * Date: 24/06/14
- * Time: 20:47
+ * FormsViewhelper
+ * Murrmurr framework
+ *
+ * builds some form tags
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 24.06.2014
+ * @version 1.0
  */
 
 class FormViewhelper extends BaseViewhelper {

@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Image
+ * Murrmurr framework
+ *
+ * class for manipulating images
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 30.01.2010
+ * @version 1.2.1
+ */
+
 class Image
 {
 	private $iImageWidth;

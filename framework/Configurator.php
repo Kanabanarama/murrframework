@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Confiturator
+ * Murrmurr framework
+ *
+ * switching of standard or application defined config files
+ * and post processing of certain config values
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @version 1.0
+ */
+
 class Configurator
 {
 	public function __construct() {}
@@ -12,6 +23,7 @@ class Configurator
 			require_once(__DIR__ . '/predef/config/config.php');
 		}
 
+		// utf-8 handling
 		if(constant('_UTF8') === true) {
 			mb_internal_encoding('UTF-8');
 			/*mb_http_output( "UTF-8" );
@@ -20,6 +32,17 @@ class Configurator
 			iconv_set_encoding("output_encoding", "UTF-8");*/
 			header('Content-Type: text/html; charset=utf-8');
 		}
+
+		// Load table configuration and push it into the registry, if it exists
+		/*if(is_file(ROOT_DIR.'application/config/tables.php')) {
+			include_once(ROOT_DIR.'application/config/tables.php');
+		} else {
+			include_once(__DIR__ . '/predef/config/tables.php');
+		}
+
+		if(isset($tables)) {
+			Registry::set('tables', $tables);
+		}*/
 	}
 }
 

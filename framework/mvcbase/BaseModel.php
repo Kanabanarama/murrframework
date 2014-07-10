@@ -2,10 +2,13 @@
 
 /**
  * BaseModel
+ * Murrmurr framework
  *
- * Defines the abstract base class for every Model
+ * Defines the abstract base class for every model
  *
- * @author René Lantzsch <renelantsch@web.de>
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 30.01.2010
+ * @version 1.1.0
  */
 
 abstract class BaseModel

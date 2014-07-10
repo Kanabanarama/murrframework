@@ -1,9 +1,14 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: Kana
- * Date: 02/07/14
- * Time: 21:42
+ * ObfuscateViewhelper
+ * Murrmurr framework
+ *
+ * obfuscates text and tags to be invisible for crawlers
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 02.07.2014
+ * @version 1.0
  */
 
 class ObfuscateViewhelper extends BaseViewhelper {

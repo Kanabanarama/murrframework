@@ -14,7 +14,7 @@ define('_MAILER_USE_SMTP', false);
 define('MYSQL_HOST',     'localhost');
 define('MYSQL_USER',     'root');
 define('MYSQL_PSSWD',    '');
-define('MYSQL_DATABASE', 'kanoa');
+define('MYSQL_DATABASE', 'murrmurr');
 
 // Tabellen
 

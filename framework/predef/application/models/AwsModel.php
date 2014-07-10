@@ -1,14 +1,16 @@
 <?php
 
-/*http://www.dereleased.com/2010/01/11/arrays-of-objects-and-__get-friends-forever/*/
-
-/*
- * Auf die Ergebnisse kann man mit objAWSModel->Item zugreifen, dabei ist Item[i] das i'te Suchergebnis.
- * objAWSModel->TotalResults gibt die Anzahl gefundener Suchergebnisse zurück.
- * 
+/**
+ * AwsModel
+ * Murrmurr framework
+ *
+ * looks up books from amazon web service (advertising api) via REST
+ * and returns the results as objects
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 02.07.2014
+ * @version 1.0
  */
-
-// TODO: - methode soll nur aktuelles ergebnis-array zurückgeben
 
 class AwsModel extends BaseModel
 {

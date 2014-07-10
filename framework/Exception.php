@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * Exception
+ * Murrmurr framework
+ *
+ * error and exception catching
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @version 1.1
+ *
+ * 1.1: merged handling for errors and exceptions
+ */
+
 function fwErrorHandler($iErrno, $strErr, $strErrFile, $iErrLine) {
 	if (error_reporting() == 0) {
 		return; // do nothing when error_reporting is disabled

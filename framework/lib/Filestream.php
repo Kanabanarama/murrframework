@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * StreamDownload
+ * Murrmurr framework
+ *
+ * class for file downloads for counting or preventing direct file access
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 30.01.2010
+ * @version 1.0
+ */
+
 class StreamDownload
 {
 	private $_strFileContent;
@@ -16,7 +27,7 @@ class StreamDownload
 	public function __toString()
 	{
 		$this->send();
-		return;
+		return '';
 	}
 
 	private function send()

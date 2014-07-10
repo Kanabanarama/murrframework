@@ -2,16 +2,16 @@
 
 /**
  * Autoload
+ * Murrmurr framework
  *
- * Auto loads the models, controllers and views of your application
- * depending of the url-path.
+ * Auto loads the models, controllers and views
+ * and other classes of the application
  *
- * @author René Lantzsch
- * @param string $strClassName Name of class
+ * @author René Lantzsch <kana@bookpile.net>
  * @version 1.0
  */
 
-function __kanoa_autoload($strClassName) {
+function __murrmurr_autoload($strClassName) {
 	$aAutoloadDirectories = array(CONTROLLER_DIR, VIEW_DIR, MODEL_DIR, PREDEF_CONTROLLER_DIR, PREDEF_VIEW_DIR, PREDEF_VIEWHELPER_DIR, PREDEF_MODEL_DIR, LIB_DIR);
 	$strFile = ucfirst($strClassName) . '.php';
 
@@ -37,6 +37,6 @@ function __kanoa_autoload($strClassName) {
 	}
 }
 
-spl_autoload_register('__kanoa_autoload', true, true);
+spl_autoload_register('__murrmurr_autoload', true, true);
 
 ?>

@@ -2,10 +2,11 @@
 
 /**
  * Registry
+ * Murrmurr framework
  *
- * A class to encapsulate globals
+ * class to encapsulate globals
  *
- * @author René Lantzsch
+ * @author René Lantzsch <kana@bookpile.net>
  * @version 1.2
  *
  * 1.1: added push

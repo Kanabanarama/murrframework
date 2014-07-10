@@ -2,17 +2,17 @@
 
 /*
  * Router
- *
- * <René Lantzsch 30.01.2010> Erstversion
- *
- * @author René Lantzsch <renelantzsch@web.de>
- * @since 30.01.2010
- * @version 1.0.1
+ * Murrmurr framework
  *
  * Breaks down the url to a controller/subject/action path
  * and instancing the desired Controller automatically.
  * Is called via Router::start()
  *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 30.01.2010
+ * @version 1.0.1
+ *
+ * 1.0.1 fix for 404 base href
  */
 
 class Router

@@ -1,8 +1,16 @@
 <?php
 
-/*function format($str, $len) {
-	return CachedHtmlView::makeStringFitting($str, $len);
-}*/
+/**
+ * TemplateView
+ * Murrmurr framework
+ *
+ * view that builds a page from wrapping html and content html
+ * and parses some markers
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 30.01.2010
+ * @version 1.2.0
+ */
 
 class TemplateView extends BaseView
 {
@@ -156,10 +164,13 @@ class TemplateView extends BaseView
 					unset($aAttributes['name']);
 					$oViewhelper = new $strViewhelperClassName();
 					//$oViewhelper->transferVariables($this->aVars);
-					$strReplaceContent = $oViewhelper->render($strTagContent, $aAttributes);
-					if(!isset($aAttributes['escape']) || $aAttributes['escape'] != 0) {
-						$strTagContent = $oViewhelper->secureContent($strTagContent);
+					if(!isset($aAttributes['strip']) || $aAttributes['strip'] != 0) {
+						$strTagContent = $oViewhelper->stripContent($strTagContent);
 					}
+					if(!isset($aAttributes['escape']) || $aAttributes['escape'] != 0) {
+						$strTagContent = $oViewhelper->escapeContent($strTagContent);
+					}
+					$strReplaceContent = $oViewhelper->render($strTagContent, $aAttributes);
 					$contents = str_replace($aViewhelpers[$i], $strReplaceContent, $contents);
 				} else {
 					throw new Exception('Viewhelper tag has no name.', 33);
@@ -276,7 +287,7 @@ class TemplateView extends BaseView
 	/* country codes according to ISO 3166 */
 	// TODO: laden aus xml + lang integration
 	public function getCountryFromCode($countryCode) {
-		if($countryCode === '') { return '-'; }
+		if(!$countryCode || $countryCode === '') { return '-'; }
 		$countries = array(
 			'de' => 'Germany',
 			'ch' => 'Switzerland',

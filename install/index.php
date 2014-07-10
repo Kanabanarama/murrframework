@@ -1,13 +1,16 @@
 <?php
 /**
  * index.php
+ * Murrmurr framework
  *
- * <René Lantzsch 23.01.2009> Erstversion
+ * the install script
+ *
+ * @author René Lantzsch <kana@bookpile.net>
  *
  * @author René Lantzsch <renelantzsch@web.de>
  * @copyright Copyright (c) René Lantzsch 23.01.2009
  * @since 23.01.2009
- * @version 0.3a
+ * @version 0.4a
  */
 
 define('INSTALL', true);
@@ -56,8 +59,6 @@ class Installer
 		}
 
 		if($this->oDB->getStatus() == 1 || $bCreateDbResult) {
-			//$strQuery = "SHOW TABLES";
-			//$result = $this->oDB->query($strQuery);
 			$result = NULL;
 
 			if($result == NULL) {
@@ -67,8 +68,6 @@ class Installer
 				$import = preg_replace("%^--(.*)\n%mU", '', $import);   // comments
 				//$import = preg_replace("%^$\n%mU", '', $import);
 				$import = preg_replace("/[\s][\s]*/"," ", $import);
-
-				//$import = $this->oDB->escape($import);
 				$import = explode(";", $import);
 
 				$aInstructions = array();
@@ -81,7 +80,6 @@ class Installer
 				}
 
 				foreach($aInstructions as $strQuery) {
-					//var_dump($strQuery);
 					$result = $this->oDB->query($strQuery);
 				}
 

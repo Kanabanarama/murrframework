@@ -1,9 +1,14 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: Kana
- * Date: 24/06/14
- * Time: 20:47
+ * StringViewhelper
+ * Murrmurr framework
+ *
+ * viewhelper for manupilating strings
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 24.06.2014
+ * @version 1.1.0
  */
 
 class StringViewhelper extends BaseViewhelper {
@@ -15,7 +20,9 @@ class StringViewhelper extends BaseViewhelper {
 				if(strlen($strText) > $aAttributes['length']) {
 					$strManipulatedText = substr($strText, 0, $aAttributes['length']);
 					$strManipulatedText = substr($strText, 0, strrpos($strManipulatedText, ' '));
-					$strManipulatedText .= '...';
+					if($aAttributes['tail']) {
+						$strManipulatedText .= $aAttributes['tail'];
+					}
 				} else {
 					$strManipulatedText = $strText;
 				}
@@ -33,6 +40,7 @@ class StringViewhelper extends BaseViewhelper {
 
 		return nl2br($strManipulatedText);
 	}
+
 }
 
 ?>

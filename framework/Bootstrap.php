@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Bootstrap
+ * Murrmurr framework
+ *
+ * loading and initialization of all framework relevant classes
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @version 1.0
+ */
+
 // TODO: contants into config manager?
 $root  = str_replace(DIRECTORY_SEPARATOR, '/', substr(__DIR__, 0, strpos(__DIR__, 'framework')));
 $base = str_replace(DIRECTORY_SEPARATOR, '/', substr($root, strlen($_SERVER['DOCUMENT_ROOT'])));

@@ -1,23 +1,17 @@
 <?php
 
 /**
- * index.php
+ * index
+ * Murrmurr framework
  *
- * <René Lantzsch 23.01.2009> Erstversion
+ * loads bootstrap and starts the router
+ *
+ * @author René Lantzsch <kana@bookpile.net>
  *
  * @author René Lantzsch <renelantzsch@web.de>
  * @copyright Copyright (c) René Lantzsch 23.01.2009
  * @since 23.01.2009
- * @version 0.4a
- *
- * Framework Name? Kanoa? Rush? Murrmurr?
- *
- */
-
-/**
- * @todo part controllers to only-do and show processing (for later ajax use)
- * @todo strip everything down to widgets
- * @todo make folders for modules?
+ * @version 1.0
  */
 
 require_once 'framework/Bootstrap.php';
@@ -36,30 +30,47 @@ bookpile.net/profile/Kana/edit/
 
 ::FILE STRUCTURE::
 /
+|-- install
+|   `-- install scripts
 |
 |--framework
-|  |-- base
-|  |   |-- model
-|  |   |-- view
-|  |   `-- controller
+|  |
+|  |-- framework specific classes
+|  |
+|  |-- mvcbase
+|  |   |-- base model class
+|  |   |-- base controller class
+|  |   |-- base view class
+|  |   `-- base viewhelper class
+|  |
+|  |-- predef
+|  |   |-- config
+|  |   |--application
+|  |   |  |-- models
+|  |   |  |-- controllers
+|  |   |  |-- views
+|  |   |  `-- viewhelper
+|  |   `-- templates
+|  |
+|  |-- lib
+|  |
 |  `-- drivers
 |
-|--private
-|  |-- config
-|  |   `-- config.php
-|  |-- libs
-|  |-- models
-|  |-- controllers
-|  |-- views
-|  |   `--helpers
-|  `-- install
-|
-`--public
-   `-- templates
-       |-- html
-       |-- css
-       |-- gfx
-       `-- js
+`--application
+   |
+   |-- config
+   |   |-- config file
+   |   `-- table definition file
+   |
+   |-- libs
+   |
+   |-- models
+   |-- controllers
+   |-- views
+   |-- viewhelpers
+   |
+   |-- templates
+   `-- uploads
 */
 
 ?>

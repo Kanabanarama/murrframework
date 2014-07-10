@@ -1,8 +1,15 @@
 <?php
 
-/*function format($str, $len) {
-	return CachedHtmlView::makeStringFitting($str, $len);
-}*/
+/**
+ * JsonView
+ * Murrmurr framework
+ *
+ * serves content as json formatted string
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 26.06.2014
+ * @version 1.0
+ */
 
 class JsonView extends BaseView
 {

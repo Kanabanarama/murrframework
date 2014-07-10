@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Mail
+ * Murrmurr framework
+ *
+ * mailing class that uses PhpMailer
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 21.06.2014
+ * @version 1.0
+ */
+
 require_once('PHPMailer/class.phpmailer.php');
 
 class Mail

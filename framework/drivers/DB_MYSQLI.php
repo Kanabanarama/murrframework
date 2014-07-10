@@ -1,6 +1,14 @@
 <?php
+
 /**
- * DB driver class
+ * DB_MYSQLI
+ * Murrmurr framework
+ *
+ * mysqli driver class
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 30.01.2010
+ * @version 1.1.0
  */
 
 class DB_MYSQLI

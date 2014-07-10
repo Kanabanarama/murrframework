@@ -189,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `booklist` (
   PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
-CREATE TABLE IF NOT EXISTS `booklist_entry` (
+CREATE TABLE IF NOT EXISTS `booklistentry` (
   `uid` int(11) unsigned NOT NULL auto_increment,
   `created` timestamp NULL default NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -201,4 +201,14 @@ CREATE TABLE IF NOT EXISTS `booklist_entry` (
   `score` tinyint(4) NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `noduplicates` (`parent_booklist`,`booktitle`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `rank` (
+  `uid` int(11) unsigned NOT NULL auto_increment,
+  `created` timestamp NULL default NULL,
+  `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `user` int(11) unsigned NOT NULL,
+  `rank` int(11) unsigned NOT NULL,
+  `pages` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

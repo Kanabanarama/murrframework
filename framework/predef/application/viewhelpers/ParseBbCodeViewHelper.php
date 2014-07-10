@@ -1,9 +1,14 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: Kana
- * Date: 23/06/14
- * Time: 20:47
+ * UriViewhelper
+ * Murrmurr framework
+ *
+ * viewhelper for manupilating urls
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 23.06.2014
+ * @version 1.1.0
  */
 
 class ParseBbCodeViewhelper extends BaseViewhelper {

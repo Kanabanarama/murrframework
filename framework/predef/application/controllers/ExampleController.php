@@ -1,10 +1,14 @@
 <?php
 
-/*
-* Beispiel Controller
-* @author René Lantzsch <kana@bookpile.de>
-* @copyright Copyright (c) 2014 René Lantzsch
-*/
+/**
+ * ExampleController
+ * Murrmurr framework
+ *
+ * example controller that loads an example html
+ *
+ * @author René Lantzsch <kana@bookpile.net>
+ * @version 1.0
+ */
 
 class ExampleController extends BaseController
 {

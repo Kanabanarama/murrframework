@@ -1,11 +1,12 @@
 <?php
 
-/*
- * Authorisation.class.php
+/**
+ * Authorisation
+ * Murrmurr framework
  *
- * <René Lantzsch 30.01.2010> Erstversion
+ * login, logout and session handling
  *
- * @author René Lantzsch <renelantzsch@web.de>
+ * @author René Lantzsch <kana@bookpile.net>
  * @since 30.01.2010
  * @version 1.1.0
  */
@@ -19,7 +20,7 @@ class Authorisation
 	public function __construct() {
 		$this->oDB = Registry::get('dbconnection');
 		//if(!isset($_SESSION)){
-			session_start();
+		session_start();
 		//}
 	}
 
@@ -56,29 +57,33 @@ class Authorisation
 	private function importFacebookAccount($email, $username) {
 		$error = '';
 
-		$usertable = new FluentQueryBuilder(TBL_USER);
+		$strQuery = sprintf("INSERT INTO %s
+							(created,email,username,active)
+							VALUES (NOW(),'%s','%s','%s',1)",
+			TBL_USER,
+			$this->oDB->escape($email),
+			$this->oDB->escape($username));
 
-		$NEWUSER = new stdClass();
-		$NEWUSER->username  = $username;
-		$NEWUSER->email		= $email;
-		$NEWUSER->created	= date('Y.m.d H:i:s');
-		$NEWUSER->active    = 1;
+		$result = $this->oDB->query($strQuery);
 
-		$result = $usertable->save($NEWUSER);
-
-		$userId = $usertable->getLastId();
+		$userId = $this->oDB->get_last_id();
 
 		if($result != true) {
-			if($usertable->lastErrorWas('DUPLICATE')) {
+			// TODO: ?
+			if($this->oDB->error === 'DUPLICATE') {
 				$error = 'mailexists';
 			} else {
 				$error = 'creationfailed';
 			}
 		}
 
-		$profiletable = new FluentQueryBuilder(TBL_PROFILE);
-		$NEWPROFILE = new stdClass();
-		$result = $profiletable->relate($userId, $usertable)->save($NEWPROFILE);
+		$strQuery = sprintf("INSERT INTO %s
+							(created,parent_user)
+							VALUES (NOW(),'%s')",
+			TBL_PROFILE,
+			intval($userId));
+
+		$result = $this->oDB->query($strQuery);
 
 		return $result;
 	}

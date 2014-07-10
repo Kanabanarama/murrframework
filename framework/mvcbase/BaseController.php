@@ -2,12 +2,13 @@
 
 /**
  * BaseController
+ * Murrmurr framework
  *
  * Defines the abstract base class for every Controller
  *
- * @author René Lantzsch <renelantsch@web.de>
- * @param string $strSubject  Subject that is to be handled by the Controller
- * @param string $strAction  Other parameters for the Controller
+ * @author René Lantzsch <kana@bookpile.net>
+ * @since 30.01.2010
+ * @version 1.1.0
  */
 
 abstract class BaseController
@@ -42,6 +43,10 @@ abstract class BaseController
 	public $GET;
 	public $FILES;
 
+	/*
+	 * @param string $strSubject  Subject that is to be handled by the Controller
+	 * @param string $strAction  Other parameters for the Controller
+	 */
 	public function __construct($strSubject = null, $strAction = null, $aParams = null)	{
 		//var_dump(get_class($this), $this->isSingleton);
 		// Wenn die Klasse schon existiert aber Singleton-Flag hat (z.B. Menü), nicht nochmal instanzieren!
@@ -113,6 +118,7 @@ abstract class BaseController
 			// Post processor:
 			if(is_file(CONTROLLER_DIR.'/PostProcessor.php')) {
 				$postProcessor = new PostProcessor();
+				$postProcessor->setController($this);
 				$postProcessor->process();
 				$this->getView()->set('section', $this->section);
 				$this->getView()->set('messages', $this->messages);
