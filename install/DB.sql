@@ -20,20 +20,21 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 CREATE TABLE IF NOT EXISTS `user` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `username` char(50) NOT NULL,
-  `password` char(50) NOT NULL,
-  `origin` char(20) default NULL,
-  `active` tinyint(1) default '0',
-  `privileges` tinyint(2) default '-1',
-  `session` char(50) default NULL,
+  `password` text NOT NULL,
+  `origin` text DEFAULT NULL,
+  `active` tinyint(1) DEFAULT '0',
+  `privileges` tinyint(2) DEFAULT '-1',
+  `session` char(50) DEFAULT NULL,
   `ip_addr` text NOT NULL,
-  `firstname` char(50) default NULL,
-  `lastname` char(50) default NULL,
-  `email` char(150) NOT NULL default '',
-  `facebook_account` char(150) NOT NULL default '',
-  `lastlogin` datetime default NULL,
+  `firstname` text DEFAULT NULL,
+  `lastname` text DEFAULT NULL,
+  `email` char(100) NOT NULL DEFAULT '',
+  `facebook_account` text NOT NULL DEFAULT '',
+  `facebook_settings` text NOT NULL,
+  `lastlogin` datetime DEFAULT NULL,
   PRIMARY KEY  (`uid`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `username` (`username`)
@@ -45,6 +46,7 @@ INSERT IGNORE INTO `d00eea23`.`user` (
 `updated` ,
 `username` ,
 `password` ,
+`origin` ,
 `active` ,
 `privileges` ,
 `session` ,
@@ -52,19 +54,21 @@ INSERT IGNORE INTO `d00eea23`.`user` (
 `firstname` ,
 `lastname` ,
 `email` ,
+`facebook_account` ,
+`facebook_settings` ,
 `lastlogin`
 )
-VALUES (
-NULL , NOW( ) , NOW( ) , 'admin',  '5f4dcc3b5aa765d61d8327deb882cf99',  '1',  '2', NULL ,  '',  'Administrator',  '',  '', NOW( )
-);
+VALUES
+(NULL , NOW( ) , NOW( ) , 'admin',  '5f4dcc3b5aa765d61d8327deb882cf99',  'install',  '1',  '2', NULL ,  '',  'Administrator',  '',  'kana@bookpile.net', NULL, NULL, NOW( )),
+(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 'Kana', '75f03325b6915e6b8cf928874e354496', 'install', '1', '-1', '70gkqlm0pud8a2shde3bb9n1r2', '', '', '', 'kanabanarama@googlemail.com', 'kana-noir@hotmail.de', NULL, '2014-07-13 20:35:22');
 
 --
 -- Table structure for table `profile`
 --
 
 CREATE TABLE IF NOT EXISTS `profile` (
-  `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `parent_user` int(11) unsigned NOT NULL,
   `description` text NOT NULL,
@@ -76,35 +80,39 @@ CREATE TABLE IF NOT EXISTS `profile` (
   PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
+INSERT INTO `d00eea23`.`profile`
+(`uid`, `updated`, `created`, `parent_user`, `description`, `image_profile`, `image_forum`, `country`, `gender`, `birthday`)
+VALUES
+(NULL, NOW(), NOW(), 1, '[b]42[/b]', '', '', '', 1, '0000-00-00'),
+(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 2, '<h1>test</h1>\r\n[b]test[/b]', '', '', '', 1, '0000-00-00');
+
 --
 -- Table structure for table `content`
 --
 
 CREATE TABLE IF NOT EXISTS `content` (
-  `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `title` char(50) NOT NULL,
+  `title` text NOT NULL,
   `content` text NOT NULL,
   `userlevel` int(11) unsigned NULL,
   `parent_user` int(11) unsigned NOT NULL,
-  `foreign_tag` VARCHAR( 255 ) DEFAULT NULL,
   PRIMARY KEY  (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `tag` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `tag` char(50) NOT NULL,
-  `parent_content` VARCHAR( 255 ) NOT NULL DEFAULT  '',
+  `tag` text NOT NULL,
   `count` int(11) unsigned NOT NULL,
   PRIMARY KEY  (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `content_relation_tag` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `mm_foreign_content` int(11) unsigned NOT NULL,
   `mm_foreign_tag` int(11) unsigned NOT NULL,
@@ -112,33 +120,34 @@ CREATE TABLE IF NOT EXISTS `content_relation_tag` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `news` (
-  `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
-  `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `title` char(50) NOT NULL,
-  `content` NOT NULL,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `updated` timestamp NULL DEFAULT NULL,
+  `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `title` text NOT NULL,
+  `content` text NOT NULL,
+  `userlevel` int(11) unsigned DEFAULT NULL,
   `parent_user` int(11) unsigned NOT NULL,
-  `publication_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`uid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+  `publication_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `news_image` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `parent_news` int(11) NOT NULL,
-  `title` char(50) NOT NULL,
-  `alt` NOT NULL
-  `description` NOT NULL
-  `image` char(50) NOT NULL,
-  `position` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `title` text NOT NULL,
+  `alt` text NOT NULL,
+  `description` text NOT NULL,
+  `image` text NOT NULL,
+  `image_position` tinyint(1) DEFAULT '0',
   PRIMARY KEY  (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 CREATE TABLE IF NOT EXISTS `author` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `name` text NOT NULL,
   PRIMARY KEY (`uid`)
@@ -146,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `author` (
 
 CREATE TABLE IF NOT EXISTS `booktitle` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `title` text NOT NULL,
   `author` int(11) NULL,
@@ -155,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `booktitle` (
 
 CREATE TABLE IF NOT EXISTS `booktitle_translation` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `parent_book` int(11) unsigned NOT NULL,
   `title` text NOT NULL,
@@ -167,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `booktitle_translation` (
 
 CREATE TABLE IF NOT EXISTS `bookedition` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `parent_booktitle` int(11) unsigned NOT NULL,
   `language` tinytext NOT NULL,
@@ -179,12 +188,12 @@ CREATE TABLE IF NOT EXISTS `bookedition` (
   `image` text NOT NULL,
   `link` text NOT NULL,
   PRIMARY KEY (`uid`),
-  UNIQUE KEY `noduplicates` (`parent_book`,`isbn13`)
+  UNIQUE KEY `noduplicates` (`parent_booktitle`,`isbn13`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `booklist` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `parent_user` int(11) unsigned NOT NULL,
   PRIMARY KEY (`uid`)
@@ -192,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `booklist` (
 
 CREATE TABLE IF NOT EXISTS `booklistentry` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `parent_booklist` int(11) NOT NULL,
   `booktitle` int(11) NOT NULL,
@@ -206,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `booklistentry` (
 
 CREATE TABLE IF NOT EXISTS `rank` (
   `uid` int(11) unsigned NOT NULL auto_increment,
-  `created` timestamp NULL default NULL,
+  `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `user` int(11) unsigned NOT NULL,
   `rank` int(11) unsigned NOT NULL,

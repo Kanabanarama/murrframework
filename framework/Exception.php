@@ -88,6 +88,7 @@ function renderError($oError) {
 }
 
 $oldFwErrorHandler = set_error_handler("fwErrorHandler");
-$oldFwErrorHandler = set_exception_handler("fwExceptionHandler");
+$oldFwExceptionHandler = set_exception_handler("fwExceptionHandler");
+//$oldFwShutdownHandler = register_shutdown_function('fwErrorHandler');
 
 ?>
