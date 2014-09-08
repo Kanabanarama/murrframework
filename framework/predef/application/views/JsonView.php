@@ -26,7 +26,7 @@ class JsonView extends BaseView
 		} else {
 			return false;
 		}
-		self::$bBindInPage = true;
+		//self::$bBindInPage = true;
 	}
 
 	/**
@@ -55,9 +55,9 @@ class JsonView extends BaseView
 
 	public function publish($objCallingController) {
 		$this->controller = $objCallingController;
-		if($objCallingController->ajaxify == 1) {
+		/*if($objCallingController->ajaxify == 1) {
 			self::$bBindInPage = false;
-		}
+		}*/
 		$objCallingController->setView($this);
 	}
 
@@ -79,9 +79,9 @@ class JsonView extends BaseView
 			extract($this->aVars); // Extract the vars to local namespace
 		}
 
-		if(is_array(self::$aWidgets)) {
+		/*if(is_array(self::$aWidgets)) {
 			extract(self::$aWidgets);
-		}
+		}*/
 
 		ob_start(); // Start output buffering
 

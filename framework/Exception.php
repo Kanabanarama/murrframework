@@ -78,7 +78,12 @@ function renderError($oError) {
 	//$root = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__);
 	//$base = str_replace(DIRECTORY_SEPARATOR, '/', substr($root, strlen($_SERVER['DOCUMENT_ROOT'])));var_dump($base);
 
-	require_once(ROOT_DIR . 'framework/predef/templates/error.htm');
+	if(_DEBUG) {
+		require_once(ROOT_DIR . 'framework/predef/templates/error.htm');
+	} else {
+		Logger:log($message.' ('.$location.')');
+	}
+
 	exit;
 }
 

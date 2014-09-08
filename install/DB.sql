@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `firstname` char(50) default NULL,
   `lastname` char(50) default NULL,
   `email` char(150) NOT NULL default '',
+  `facebook_account` char(150) NOT NULL default '',
   `lastlogin` datetime default NULL,
   PRIMARY KEY  (`uid`),
   UNIQUE KEY `email` (`email`),

@@ -4,6 +4,7 @@
 
 define('_UTF8', true);
 define('_DEBUG', true);
+define('_LOGFILE', false);
 
 define('_DBDRIVER', 'DB_MYSQLI');
 define('_MAILER', 'PHPMailer');

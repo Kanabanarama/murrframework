@@ -58,9 +58,10 @@ class Authorisation
 		$error = '';
 
 		$strQuery = sprintf("INSERT INTO %s
-							(created,email,username,active)
+							(created,email,facebook_account,username,active)
 							VALUES (NOW(),'%s','%s','%s',1)",
 			TBL_USER,
+			$this->oDB->escape($email),
 			$this->oDB->escape($email),
 			$this->oDB->escape($username));
 
