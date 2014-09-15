@@ -128,6 +128,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `userlevel` int(11) unsigned DEFAULT NULL,
   `parent_user` int(11) unsigned NOT NULL,
   `publication_date` datetime DEFAULT NULL,
+  `published` tinyint(1) NOT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

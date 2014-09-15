@@ -44,7 +44,7 @@ class Installer
 			}
 		}
 
-		$staticdir = BASE_DIR . 'framework/predef/templates/';
+		$staticdir = '/' . BASE_DIR . 'framework/predef/templates/';
 
 		require_once('install.htm');
 	}
@@ -52,8 +52,6 @@ class Installer
 	private function checkDB() {
 		$bResult = false;
 		$this->oDB = Registry::get('dbconnection');
-
-        //$deleteDb = $this->oDB->query('DROP DATABASE '.MYSQL_DATABASE);
 
 		if($this->oDB->getStatus() != 1) {
 			$bCreateDbResult = $this->oDB->query('CREATE DATABASE '.MYSQL_DATABASE);

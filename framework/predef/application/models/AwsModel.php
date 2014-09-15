@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AwsModel
+ * Amazon Web Services Model
  * Murrmurr framework
  *
  * looks up books from amazon web service (advertising api) via REST
@@ -57,12 +57,13 @@ class AwsModel extends BaseModel
 	public function setLocale($strLocaleKey) {
 		//if($strLocaleKey == 'de') {	$this->strLocale = 'de'; }
 		//if($strLocaleKey == 'uk') {	$this->strLocale = 'uk'; }
-		
+
 		switch($strLocaleKey) {
 			case 'de':
 				$this->strLocale = 'de';
 				break;
 			case 'us':
+			case 'en':
 				$this->strLocale = 'com';
 				break;
 			case 'uk':
@@ -224,7 +225,12 @@ class AwsModel extends BaseModel
 	}
 
 
-	
+	private function setSortRank($strRank) {
+		// TODO:
+		/*'salesrank','reviewrank','pricerank','inverse-pricerank','-pubdate','titlerank','-titlerank','price','-price','-publication_date','-unit-sales'."*/
+		$aRequestParams['Sort'] = 'titlerank';
+	}
+
 	private function buildRequestURI() {
 		// aktuellen Zeitsring erzeugen der für den Request benutzt wird
 		$this->strDatestamp = urlencode(gmdate("Y-m-d\TH:i:s\Z"));
@@ -251,6 +257,8 @@ class AwsModel extends BaseModel
 		if($this->idType) {
 			$aRequestParams['IdType'] = $this->idType;
 		}
+
+		//$aRequestParams['Sort'] = 'titlerank';
 
 		ksort($aRequestParams);
 		
@@ -280,7 +288,7 @@ class AwsModel extends BaseModel
 		$strUri = "/onca/xml";
 		
 		$strServiceUrl = "http://".$strHost.$strUri."?";
-				
+
 		$strSignedRequest	= $strMethod."\n".$strHost."\n".$strUri."\n".$strUrlParams;
 
 		$strSignature		= urlencode(base64_encode(hash_hmac("sha256", $strSignedRequest, $this->strAccessKey, true)));
@@ -316,14 +324,17 @@ class AwsModel extends BaseModel
 		}
 		
 		$strRegexPatternItems = '/<Item>(.*?)<\/Item>/';
-		$strRegexPatternItemElements = '/<(Title|ASIN|DetailPageURL|NumberOfPages|Author|PublicationDate|Binding|Label|ISBN|EANListElement|EditorialReviews|ImageSets)>*(.*?)<\/(?:Title|ASIN|DetailPageURL|NumberOfPages|Author|PublicationDate|Binding|Label|ISBN|EANListElement|EditorialReviews|ImageSets)>/';
+		$strRegexPatternItemElements = '/<(Title|ASIN|DetailPageURL|NumberOfPages|Languages|Author|PublicationDate|Binding|Label|ISBN|EANListElement|EditorialReviews|ImageSets)>*(.*?)<\/(?:Title|ASIN|DetailPageURL|NumberOfPages|Languages|Author|PublicationDate|Binding|Label|ISBN|EANListElement|EditorialReviews|ImageSets)>/';
 		$strRegexPatternImages = '/<(SwatchImage|SmallImage|ThumbnailImage|TinyImage|MediumImage|LargeImage)>*(.*?)<\/(?:SwatchImage|SmallImage|ThumbnailImage|TinyImage|MediumImage|LargeImage)>/';
 		$strRegexPatternImageAttributes = '/<(URL|Width Units=\"pixels\"|Height Units=\"pixels\")>*(.*?)<\/(?:URL|Width|Height)>/';
-		
+
+		$strRegexPatternLanguage = '/<(Language)>*(.*?)<\/(?:Language)>/';
+		$strRegexPatternLangaugeTypes = '/<(Name|Type)>*(.*?)<\/(?:Name|Type)>/';
+
 		$strResponseData	= array();
 		$aItems				= array();
 		$oItems				= array();
-		
+
 		$iNumItems = preg_match_all($strRegexPatternItems, $strResponse, $aResponseData);
 
 		foreach($aResponseData[1] as $i => $strItem) {
@@ -335,7 +346,7 @@ class AwsModel extends BaseModel
 			
 				//var_dump($aResponseData[1]);
 				//var_dump($strValue);
-			
+
 				if($strValue != 'ImageSets') {
 					//$oItems['Item'][$i]->Content = '';
 					if($strValue == 'EditorialReviews') {
@@ -365,9 +376,34 @@ class AwsModel extends BaseModel
 					unset($oItems['Item'][$i]->EANListElement);
 				}
 			}
-			
-			//var_dump($oItems);
-			
+
+			$iLanguageSetsKey = array_search('Languages', array_values($aItems[$i][1]));
+
+			if($iLanguageSetsKey) {
+				$strLanguageSet = $aItems[$i][2][$iLanguageSetsKey];
+				$aLanguages = array();
+				preg_match_all($strRegexPatternLanguage, $strLanguageSet, $aLanguages[$i]);
+
+				$aLanguage = array();
+				$oItems['Item'][$i]->Languages = new stdClass();
+				foreach($aLanguages[$i][2] as $i23 => $strLanguage) {
+
+					preg_match_all($strRegexPatternLangaugeTypes, $strLanguage, $aLanguage[$aLanguages[$i][1][$i23]]);
+					//$oItems['Item'][$i]->$aLanguages[$i][1][$i23][$plus] = new stdClass();
+
+					$publicationType = $aLanguage[$aLanguages[$i][1][$i23]][2][1];
+					$publicationLanguage = $aLanguage[$aLanguages[$i][1][$i23]][2][0];
+
+					//var_dump($aLanguage[$aLanguages[$i][1][$i23]]);
+
+					$oItems['Item'][$i]->Languages->$publicationType = $publicationLanguage;
+
+					//$oItems['Item'][$i]->$aLanguages[$i][1][$i23][$plus]->{$publicationType}		= $aLanguage[$aLanguages[$i][1][$i23]][2][0];
+					//$plus++;
+				}
+				//$oItems['Item'][$i]->$aLanguages = array('asdf');
+
+			}
 			$iImageSetsKey = array_search('ImageSets', array_values($aItems[$i][1]));
 			
 			if($iImageSetsKey) {

@@ -1,0 +1,3 @@
+<Files *.htm>
+Deny from all
+</Files>

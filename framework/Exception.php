@@ -81,7 +81,7 @@ function renderError($oError) {
 	if(_DEBUG) {
 		require_once(ROOT_DIR . 'framework/predef/templates/error.htm');
 	} else {
-		Logger:log($message.' ('.$location.')');
+		Logger::log($message.' ('.$location.')');
 	}
 
 	exit;
@@ -89,6 +89,5 @@ function renderError($oError) {
 
 $oldFwErrorHandler = set_error_handler("fwErrorHandler");
 $oldFwExceptionHandler = set_exception_handler("fwExceptionHandler");
-//$oldFwShutdownHandler = register_shutdown_function('fwErrorHandler');
 
 ?>

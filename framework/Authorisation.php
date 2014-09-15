@@ -55,7 +55,7 @@ class Authorisation
 
 
 	private function importFacebookAccount($email, $username) {
-		$error = '';
+		$errors = array();
 
 		$strQuery = sprintf("INSERT INTO %s
 							(created,email,facebook_account,username,active)
@@ -72,9 +72,9 @@ class Authorisation
 		if($result != true) {
 			// TODO: ?
 			if($this->oDB->error === 'DUPLICATE') {
-				$error = 'mailexists';
+				$errors[] = 'mailexists';
 			} else {
-				$error = 'creationfailed';
+				$errors[] = 'creationfailed';
 			}
 		}
 
@@ -85,6 +85,22 @@ class Authorisation
 			intval($userId));
 
 		$result = $this->oDB->query($strQuery);
+
+		if($result != true) {
+			$errors = 'profile_creation_failed';
+		}
+
+		$strQuery = sprintf("INSERT INTO %s
+						(created,parent_user)
+						VALUES (NOW(),'%s')",
+			TBL_BOOKLIST,
+			intval($userId));
+
+		$result = $this->oDB->query($strQuery);
+
+		if($result != true) {
+			$errors = 'booklist_creation_failed';
+		}
 
 		return $result;
 	}
@@ -136,7 +152,7 @@ class Authorisation
 
 		$result = $this->oDB->query($strQuery);
 
-		$this->uid = $result[0]['uid'];
+		$this->uid = intval($result[0]['uid']);
 		$this->username = $result[0]['username'];
 		$this->email = $result[0]['email'];
 
@@ -199,12 +215,10 @@ class Authorisation
 							ON DUPLICATE KEY UPDATE
 							uid = '%s', timestamp = '%s'",
 			TBL_USERONLINE,
-
 			$this->oDB->escape($_SERVER['REMOTE_ADDR']),
 			intval($this->uid),
 			$this->oDB->escape(date('Y-m-d H:i:s')),
 			$this->oDB->escape(session_id()),
-
 			intval($this->uid),
 			$this->oDB->escape(date('Y-m-d H:i:s')));
 

@@ -19,6 +19,7 @@ class TemplateView extends BaseView
 	private $aVars = array(); /// Holds all the template variables
 	private static $aWidgets; // Widgets (müssen überall erreichbar sein)
 	private $strTemplateFile;
+    private $missingTemplateFile;
 
 	/**
 	 * Constructor
@@ -31,6 +32,7 @@ class TemplateView extends BaseView
 		} else if(is_file(STATIC_DIR . $strTemplateFile)) {
 			$this->strTemplateFile = STATIC_DIR . $strTemplateFile;
 		} else {
+            $this->missingTemplateFile = $strTemplateFile;
 			return false;
 		}
 		self::$bBindInPage = true;
@@ -105,7 +107,7 @@ class TemplateView extends BaseView
 
 		$strTemplateFile = $this->strTemplateFile;
 		if(!file_exists($strTemplateFile)) {
-			throw new Exception("Template does not exist: " . $strTemplateFile, 124);
+			throw new Exception("Template does not exist: " . $this->missingTemplateFile, 124);
 		}
 
 		$currentErrorReportingLevel = error_reporting();

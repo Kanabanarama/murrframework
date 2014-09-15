@@ -10,6 +10,9 @@
  * @version 1.0
  */
 
+/* PHP 5.2 __DIR__ workaround */
+if(!defined(__DIR__)) { define('__DIR__', dirname(__FILE__)); }
+
 // TODO: contants into config manager?
 $root  = str_replace(DIRECTORY_SEPARATOR, '/', substr(__DIR__, 0, strpos(__DIR__, 'framework')));
 $base = str_replace(DIRECTORY_SEPARATOR, '/', substr($root, strlen($_SERVER['DOCUMENT_ROOT'])));

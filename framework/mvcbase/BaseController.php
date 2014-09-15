@@ -120,13 +120,17 @@ abstract class BaseController
 				$postProcessor = new PostProcessor();
 				$postProcessor->setController($this);
 				$postProcessor->process();
-				$this->getView()->set('section', $this->section);
-				$this->getView()->set('messages', $this->messages);
-				$this->getView()->set('errors', $this->errors);
-				$postVars = $postProcessor->getViewVars();
-				if(count($postVars)) {
-					$this->getView()->setAll($postVars);
-					//var_dump('set post');
+				if(!$this->executeOnly) {
+					$this->getView()->set('section', $this->section);
+					$this->getView()->set('messages', $this->messages);
+					$this->getView()->set('errors', $this->errors);
+					$postVars = $postProcessor->getViewVars();
+					if(count($postVars)) {
+						$this->getView()->setAll($postVars);
+						//var_dump('set post');
+					}
+				} else {
+					$postProcessor->executeOnly = true;
 				}
 			}
 			//$this->setPostProcessor();

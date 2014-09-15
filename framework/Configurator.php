@@ -33,6 +33,8 @@ class Configurator
 			header('Content-Type: text/html; charset=utf-8');
 		}
 
+		date_default_timezone_set('Europe/Berlin');
+
 		// Load table configuration and push it into the registry, if it exists
 		/*if(is_file(ROOT_DIR.'application/config/tables.php')) {
 			include_once(ROOT_DIR.'application/config/tables.php');

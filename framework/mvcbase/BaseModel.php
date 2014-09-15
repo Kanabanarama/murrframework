@@ -13,6 +13,8 @@
 
 abstract class BaseModel
 {
+    private $aVars = array();
+
 	abstract public function __construct($strParams);
 
 	public function __get($strIndex) {

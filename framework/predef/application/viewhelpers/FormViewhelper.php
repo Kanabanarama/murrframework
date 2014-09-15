@@ -70,6 +70,22 @@ class FormViewhelper extends BaseViewhelper {
 		return $countrySelect;
 	}
 
+	private function languageSelect($preSelect) {
+		// TODO: get from registry later or something
+		$languages = array(
+			'en' => 'english',
+			'de' => 'german',
+			'fr' => 'french',
+			//'it' => 'italian',
+			//'es' => 'spanish',
+			//'ru' => 'russian',
+			'jp' => 'japanese'
+		);
+		$countrySelect = $this->renderSelect($languages, $preSelect, 'language');
+
+		return $countrySelect;
+	}
+
 	private function birthdaySelect($birthday) {
 		if($birthday === '0000-00-00') {
 			$birthday = '1980-01-01';
