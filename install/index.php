@@ -22,17 +22,21 @@ class Installer
 
 	function __construct() {
 		$bDbCheck = $this->checkDB();
+		$bDirectories = $this->createUploadFolders();
 
 		$aChecks = array(
-			'db' => $bDbCheck
+			'db' => $bDbCheck,
+			'dir' => $bDirectories
 		);
 
 		$aMessages = array(
-			'db' => 'Datenbankstruktur wurde angelegt.'
+			'db' => 'Datenbankstruktur wurde angelegt.',
+			'dir' => 'Upload folders wurden erstellt.'
 		);
 
 		$aErrors = array(
-			'db' => 'Datenbankstruktur konnte nicht erstellt werden.'
+			'db' => 'Datenbankstruktur konnte nicht erstellt werden.',
+			'dir' => 'Upload folder konnten nicht erstellt werden. Bitte erstelle den Ordner application/uploads mit den Rechten 777, rufe install erneut auf und gebe dem Ordner danach wieder die Rechte 755!'
 		);
 
 		$progress = '';
@@ -94,6 +98,22 @@ class Installer
 				if(current($result[0]) == 'users') {
 					$bResult = true;
 				}
+			}
+		}
+
+		return $bResult;
+	}
+
+	private function createUploadFolders() {
+		$aFolders = array(
+			'uploads' => ROOT_DIR.'application/uploads',
+			'images' => ROOT_DIR.'application/uploads/images'
+		);
+
+		$bResult = true;
+		foreach($aFolders as $folder) {
+			if(!is_dir($folder) && mkdir($folder, 0755) !== true) {
+				$bResult = $bResult && true;
 			}
 		}
 

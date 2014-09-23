@@ -13,6 +13,12 @@
 /* PHP 5.2 __DIR__ workaround */
 if(!defined(__DIR__)) { define('__DIR__', dirname(__FILE__)); }
 
+// PHP 5.2 CURLOPT_IPRESOLVE fix
+if (version_compare(PHP_VERSION, '5.3') < 0) {
+	define('CURLOPT_IPRESOLVE', 113);
+	define('CURL_IPRESOLVE_V4', 1);
+}
+
 // TODO: contants into config manager?
 $root  = str_replace(DIRECTORY_SEPARATOR, '/', substr(__DIR__, 0, strpos(__DIR__, 'framework')));
 $base = str_replace(DIRECTORY_SEPARATOR, '/', substr($root, strlen($_SERVER['DOCUMENT_ROOT'])));

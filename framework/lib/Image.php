@@ -56,6 +56,15 @@ class Image
 					$strNewFilename = md5(uniqid(rand(),true)) .'.png';
 					$this->url = 'uploads/images/'. (($strFolder) ? $strFolder.'/' : '') . $strNewFilename;
 					$this->path = 'application/'.$this->url;
+
+					//$folderTest = ROOT_DIR.'application/uploads/images/'. (($strFolder) ? $strFolder.'/' : '');
+					//file_put_contents($folderTest.'asdf.jpg', '');
+					//echo substr(sprintf('%o', fileperms($folderTest)), -4);
+					//echo(fileowner($folderTest));
+					//echo(getenv('APACHE_RUN_USER'));
+					//echo(posix_getuid());
+					//die;
+
 					$this->tag = '<img src="'.$this->url.'" width="'.$this->iImageWidth.'" height="'.$this->iImageHeight.'">';
 
 					if(($this->aSourceImage['width'] <= $this->iImageWidth) && ($this->aSourceImage['height'] <= $this->iImageHeight)) {
