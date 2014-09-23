@@ -36,6 +36,9 @@ class TemplateView extends BaseView
 			return false;
 		}
 		self::$bBindInPage = true;
+
+		$this->langManager = new Lang();
+		$this->langManager->setLanguage(Registry::get('language'));
 	}
 
 	/**
@@ -100,6 +103,11 @@ class TemplateView extends BaseView
 		if(is_array(self::$aWidgets)) {
 			extract(self::$aWidgets);
 		}
+
+		//echo($this->langManager->l('footer.about'));
+		//$L = create_function('$key', 'return $this->langManager->l($key);');
+		$L = $this->langManager->lall();
+		extract($L);
 
 		ob_start(); // Start output buffering
 
@@ -185,8 +193,9 @@ class TemplateView extends BaseView
 		return $contents;
 	}
 
-
-
+	public function L($key) {
+		return $this->langManager->l($key);
+	}
 
 
 
