@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `firstname` text DEFAULT NULL,
   `lastname` text DEFAULT NULL,
   `email` char(100) NOT NULL DEFAULT '',
+  `language` char(2) NOT NULL DEFAULT '',
   `facebook_account` text NOT NULL DEFAULT '',
   `facebook_settings` text NOT NULL,
   `lastlogin` datetime DEFAULT NULL,
@@ -54,13 +55,14 @@ INSERT IGNORE INTO `d00eea23`.`user` (
 `firstname` ,
 `lastname` ,
 `email` ,
+`language` ,
 `facebook_account` ,
 `facebook_settings` ,
 `lastlogin`
 )
 VALUES
-(NULL , NOW( ) , NOW( ) , 'admin',  '5f4dcc3b5aa765d61d8327deb882cf99',  'install',  '1',  '2', NULL ,  '',  'Administrator',  '',  'kana@bookpile.net', NULL, NULL, NOW( )),
-(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 'Kana', '75f03325b6915e6b8cf928874e354496', 'install', '1', '-1', '70gkqlm0pud8a2shde3bb9n1r2', '', '', '', 'kanabanarama@googlemail.com', 'kana-noir@hotmail.de', NULL, '2014-07-13 20:35:22');
+(NULL , NOW( ) , NOW( ) , 'admin',  '5f4dcc3b5aa765d61d8327deb882cf99',  'install',  '1',  '2', NULL ,  '',  'Administrator',  '',  'kana@bookpile.net', 'en', NULL, NULL, NOW( )),
+(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 'Kana', '75f03325b6915e6b8cf928874e354496', 'install', '1', '-1', '70gkqlm0pud8a2shde3bb9n1r2', '', '', '', 'kanabanarama@googlemail.com', 'de', 'kana-noir@hotmail.de', NULL, '2014-07-13 20:35:22');
 
 --
 -- Table structure for table `profile`

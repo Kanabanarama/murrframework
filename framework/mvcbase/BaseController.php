@@ -114,6 +114,11 @@ abstract class BaseController
 
 		try {
 			//$this->setPreProcessor();
+			if(is_file(CONTROLLER_DIR.'/PreProcessor.php')) {
+				$preProcessor = new PreProcessor();
+				$preProcessor->setController($this);
+				$preProcessor->process();
+			}
 			$this->process();
 			// Post processor:
 			if(is_file(CONTROLLER_DIR.'/PostProcessor.php')) {

@@ -27,7 +27,11 @@ class FlagViewhelper extends BaseViewhelper {
 
 	public function render($strLangCodeOrName, $strFlagIconLocation) {
 		if(strlen($strLangCodeOrName) === 2) {
-			$flagImage = $strLangCodeOrName.'.png';
+			if($strLangCodeOrName === 'en') {
+				$flagImage = 'us.png';
+			} else {
+				$flagImage = $strLangCodeOrName.'.png';
+			}
 		} else {
 			$langCode = (isset($this->langCodeMap[$strLangCodeOrName])) ? $this->langCodeMap[$strLangCodeOrName] : 'none';
 			$flagImage = $langCode.'.png';

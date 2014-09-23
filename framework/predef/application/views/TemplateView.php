@@ -280,10 +280,20 @@ class TemplateView extends BaseView
 
 	public function getAgeFromDate($date) {
 		if($date === '0000-00-00') { return '-'; }
-		$birthday = new DateTime($date);
-		$now = new DateTime();
-		$interval = $now->diff($birthday);
-		return $interval->y;
+		if (version_compare(PHP_VERSION, '5.2') >= 0) {
+			$birthday = new DateTime($date);
+			$now = new DateTime();
+			list($year1, $dayOfYear1) = explode(' ', $now->format('Y z'));
+			list($year2, $dayOfYear2) = explode(' ', $birthday->format('Y z'));
+			$age = $year1 - $year2 - ($dayOfYear1 < $dayOfYear2);
+		} else {
+			$birthday = new DateTime($date);var_dump($birthday);
+			$now = new DateTime();
+			$interval = $now->diff($birthday);
+			$age = $interval->y;
+		}
+
+		return $age;
 	}
 
 	/* country codes according to ISO 3166 */
