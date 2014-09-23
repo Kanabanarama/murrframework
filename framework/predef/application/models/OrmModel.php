@@ -45,6 +45,15 @@ class OrmModel extends BaseModel
 		return $factoredModel;
 	}
 
+	public static function debug($echo = false) {
+		$lastQuery = ORM::get_last_query();
+		if($echo) {
+			echo($lastQuery);
+		}
+
+		return $lastQuery;
+	}
+
 }
 
 ?>
