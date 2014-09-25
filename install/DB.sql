@@ -123,8 +123,8 @@ CREATE TABLE IF NOT EXISTS `content_relation_tag` (
 
 CREATE TABLE IF NOT EXISTS `news` (
   `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `updated` timestamp NULL DEFAULT NULL,
   `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated` timestamp NULL DEFAULT NULL,
   `title` text NOT NULL,
   `content` text NOT NULL,
   `userlevel` int(11) unsigned DEFAULT NULL,

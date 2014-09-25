@@ -19,7 +19,20 @@ class BackendController extends BaseController
 			$page = new TemplateView('backend.htm');
 
 			if(isset($this->POST['formaction']) && $this->POST['formaction'] === 'newscreate') {
-				var_dump($this->POST);
+				$title = $this->POST['newstitle'];
+				$content= $this->POST['newstext'];
+				$publicationDate = $this->POST['publicationdate'];
+				$publish = isset($this->POST['newscreate']) ? true : false;
+
+				$news = OrmModel::get(TBL_NEWS)->create();
+				$news->title = $title;
+				$news->content = $content;
+				$news->publication_date = $publicationDate;
+				$news->published = $publish;
+				$news->parent_user  = $userId;
+				$resultNews = $news->save();
+
+				//$this->log('new news', $resultNews);
 			}
 
 			$page->publish($this);

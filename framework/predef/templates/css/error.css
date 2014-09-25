@@ -50,16 +50,24 @@
     font-size: 12px;
 }
 
-.wrap-404 {
-    padding: 50px;
-}
-
 h1 { font-size: 20px; }
 h2 { font-size: 18px; }
 h3 { font-size: 16px; }
 h4 { font-size: 14px; }
 h5 { font-size: 12px; }
 h6 { font-size: 11px; }
+
+.body-404 {
+    background-color:#E3E3E3
+}
+
+.wrap-404 {
+    padding: 50px;
+    text-align:center;
+    margin-top:100px;
+    font-family:Arial,Helvetica,sans-serif;
+    color:#585858;
+}
 
 .image-404 {
     display: block;

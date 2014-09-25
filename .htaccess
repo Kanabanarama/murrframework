@@ -11,7 +11,8 @@ IndexIgnore *
 RewriteEngine on
 
 # dotfiles (.htaccess, .git...)
-RedirectMatch 403 /\..*$
+#RedirectMatch 403 /\..*$
+ErrorDocument 403 /relaunch/framework/predef/templates/404.htm
 
 # folders and files
 RewriteCond %{REQUEST_FILENAME} !-f

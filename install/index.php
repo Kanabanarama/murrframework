@@ -42,9 +42,9 @@ class Installer
 		$progress = '';
 		foreach($aChecks as $key => $check) {
 			if($check == true) {
-				$progress .= '<img src="gfx/icon_success.png" /> <span>' . $aMessages[$key] . '</span>';
+				$progress .= '<img src="gfx/icon_success.png" /> <span>' . $aMessages[$key] . '</span><br />';
 			} else {
-				$progress .= '<img src="gfx/icon_error.png" /> <span>' . $aErrors[$key] . '</span>';
+				$progress .= '<img src="gfx/icon_error.png" /> <span>' . $aErrors[$key] . '</span><br />';
 			}
 		}
 
@@ -107,7 +107,9 @@ class Installer
 	private function createUploadFolders() {
 		$aFolders = array(
 			'uploads' => ROOT_DIR.'application/uploads',
-			'images' => ROOT_DIR.'application/uploads/images'
+			'images' => ROOT_DIR.'application/uploads/images',
+			'profileimages' => ROOT_DIR.'application/uploads/images/avatars',
+			'newsimages' => ROOT_DIR.'application/uploads/images/news'
 		);
 
 		$bResult = true;
