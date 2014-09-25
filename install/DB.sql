@@ -190,6 +190,7 @@ CREATE TABLE IF NOT EXISTS `bookedition` (
   `isbn13` varchar(13) NOT NULL,
   `image` text NOT NULL,
   `link` text NOT NULL,
+  `fbobject` text(20) DEFAULT '',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `noduplicates` (`parent_booktitle`,`isbn13`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
