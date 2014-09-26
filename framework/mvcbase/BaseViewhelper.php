@@ -13,7 +13,7 @@
 
 abstract class BaseViewhelper
 {
-	abstract public function render($strTagContent, $aAttributes);
+	abstract public function render($strTagContent, $aAttributes, $mData);
 
 	public function escapeContent($strContent) {
 		$content = htmlspecialchars($strContent);

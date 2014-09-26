@@ -25,7 +25,7 @@ class FlagViewhelper extends BaseViewhelper {
 		'Französisch'	=> 'fr',
 	);
 
-	public function render($strLangCodeOrName, $strFlagIconLocation) {
+	public function render($strLangCodeOrName, $strFlagIconLocation, $mData) {
 		if(strlen($strLangCodeOrName) === 2) {
 			if($strLangCodeOrName === 'en') {
 				$flagImage = 'us.png';

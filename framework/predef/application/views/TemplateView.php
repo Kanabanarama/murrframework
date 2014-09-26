@@ -180,7 +180,15 @@ class TemplateView extends BaseView
 					if(!isset($aAttributes['escape']) || $aAttributes['escape'] != 0) {
 						$strTagContent = $oViewhelper->escapeContent($strTagContent);
 					}
-					$strReplaceContent = $oViewhelper->render($strTagContent, $aAttributes);
+					$mData = null;
+					if(isset($aAttributes['data'])) {
+						$dataVarName = str_replace('$', '', $aAttributes['data']);
+						if(isset($this->aVars[$dataVarName])) {
+							$mData = $this->aVars[$dataVarName];
+						}
+						unset($aAttributes['data']);
+					}
+					$strReplaceContent = $oViewhelper->render($strTagContent, $aAttributes, $mData);
 					$contents = str_replace($aViewhelpers[$i], $strReplaceContent, $contents);
 				} else {
 					throw new Exception('Viewhelper tag has no name.', 33);

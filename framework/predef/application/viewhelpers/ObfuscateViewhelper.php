@@ -13,7 +13,7 @@
 
 class ObfuscateViewhelper extends BaseViewhelper {
 
-	public function render($strText, $aAttributes) {
+	public function render($strText, $aAttributes, $mData) {
 		if(!isset($aAttributes['type'])) {
 			throw new Exception('Obfuscate viewhelper has no type defined', 55);
 		} else {

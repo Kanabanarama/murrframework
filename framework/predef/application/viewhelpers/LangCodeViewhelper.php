@@ -25,7 +25,7 @@ class LangCodeViewhelper extends BaseViewhelper {
 		'Französisch'	=> 'fr',
 	);
 
-	public function render($strLangCodeOrName, $strFlagIconLocation) {
+	public function render($strLangCodeOrName, $strFlagIconLocation, $mData) {
 		$langCode = (isset($this->langCodeMap[$strLangCodeOrName])) ? $this->langCodeMap[$strLangCodeOrName] : 'none';
 
 		return $langCode;

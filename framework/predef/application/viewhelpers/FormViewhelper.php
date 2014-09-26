@@ -13,7 +13,7 @@
 
 class FormViewhelper extends BaseViewhelper {
 
-	public function render($strText, $aAttributes) {
+	public function render($strText, $aAttributes, $mData) {
 		if(!isset($aAttributes['type'])) {
 			throw new Exception('Form viewhelper has no type defined', 55);
 		} else {
@@ -21,7 +21,7 @@ class FormViewhelper extends BaseViewhelper {
 			unset($aAttributes['type']);
 			//$result = call_user_func('$this->'.$methodName, array($strText, $aAttributes));
 			if(method_exists($this, $methodName)) {
-				$content = $this->{$methodName}($strText, $aAttributes);
+				$content = $this->{$methodName}($strText, $aAttributes, $mData);
 			} else {
 				throw new Exception('Form viewhelper method '.$methodName.' is missing.', 55);
 			}
@@ -104,6 +104,16 @@ class FormViewhelper extends BaseViewhelper {
 		$content = '<input name="birthday" class="input-birthday datepicker" value="'.$birthday.'" />';
 
 		return $content;
+	}
+
+	private function dataSelect($arg, $uid, $data) {
+		$uidList = array();
+		foreach($data as $entry) {
+			$uidList[$entry->uid] = $entry->title;
+		}
+		$countrySelect = $this->renderSelect($uidList, $uid, 'data');
+
+		return $countrySelect;
 	}
 
 }

@@ -13,7 +13,7 @@
 
 class StringViewhelper extends BaseViewhelper {
 
-	public function render($strText, $aAttributes) {
+	public function render($strText, $aAttributes, $mData) {
 		$strManipulatedText = '';
 		switch($aAttributes['function']) {
 			case 'fit':

@@ -13,7 +13,7 @@
 
 class ParseBbCodeViewhelper extends BaseViewhelper {
 
-	public function render($strText, $aAttributes) {
+	public function render($strText, $aAttributes, $mData) {
 		$strText = preg_replace("/\[b\](.*)\[\/b\]/Usi", "<b>\\1</b>", $strText);
 		$strText = preg_replace("/\[i\](.*)\[\/i\]/Usi", "<i>\\1</i>", $strText);
 		$strText = preg_replace("/\[u\](.*)\[\/u\]/Usi", "<u>\\1</u>", $strText);
