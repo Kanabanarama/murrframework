@@ -16,31 +16,73 @@ class BackendController extends BaseController
 		$loginstatus = Registry::get('authorisation')->is_logged_in();
 		$userId = Registry::get('authorisation')->uid;
 
-		if($loginstatus === true && $userId === 3) {
+		$user = OrmModel::get(TBL_USER)
+			->where('uid', $userId)
+			->find_one();
+
+		if($loginstatus === true && $user->privileges >= 1) {
 			$this->view = new TemplateView('backend.htm');
+
+			if(isset($this->POST['formaction']) && $this->POST['formaction'] === 'newsdelete') {
+				$entryUid = intval($this->POST['newsuid']);
+				$newsToDelete = OrmModel::get(TBL_NEWS)
+					->where('uid', $entryUid)
+					->find_one();
+				$newsToDelete->delete();
+			}
 
 			$allnews = OrmModel::get(TBL_NEWS)->find_many();
 			$this->view->set('news', $allnews);
+
+			if(isset($this->POST['formaction']) && $this->POST['formaction'] === 'newsload') {
+				$entryUid = intval($this->POST['data']);
+				if($entryUid !== 0) {
+					$existingNews = OrmModel::get(TBL_NEWS)
+						->where('uid', $entryUid)
+						->find_one();
+
+					$this->view->setAll(array(
+						'newsuid'			=> $existingNews->uid,
+						'newstitle'			=> $existingNews->title,
+						'newstext'			=> $existingNews->content,
+						'publicationdate'	=> $existingNews->publication_date,
+						'newspublished'			=> ($existingNews->published) ? 'checked="checked"' : ''
+					));
+				}
+			}
 
 			if(isset($this->POST['formaction']) && $this->POST['formaction'] === 'newscreate') {
 				$title = $this->POST['newstitle'];
 				$content= $this->POST['newstext'];
 				$publicationDate = $this->POST['publicationdate'];
-				$publish = isset($this->POST['newscreate']) ? true : false;
+				$publish = isset($this->POST['newspublished']) ? true : false;
 
-				$news = OrmModel::get(TBL_NEWS)->create();
-				$news->title = $title;
-				$news->content = $content;
-				$news->publication_date = $publicationDate;
-				$news->published = $publish;
-				$news->parent_user  = $userId;
-				$resultNews = $news->save();
+				if(isset($this->POST['newsuid'])) {
+					$entryUid = intval($this->POST['newsuid']);
+					if($entryUid !== 0) {
+						$newsToEdit = OrmModel::get(TBL_NEWS)
+							->where('uid', $entryUid)
+							->find_one();
+						$newsToEdit->title = $title;
+						$newsToEdit->content = $content;
+						$newsToEdit->publication_date = $publicationDate;
+						$newsToEdit->published = $publish;
+						$resultNews = $newsToEdit->save();
+						$newsId = $newsToEdit->uid;
+					}
+				} else {
+					$news = OrmModel::get(TBL_NEWS)->create();
+					$news->title = $title;
+					$news->content = $content;
+					$news->publication_date = $publicationDate;
+					$news->published = $publish;
+					$news->parent_user  = $userId;
+					$resultNews = $news->save();
+					$newsId = $news->id();
+				}
 
-				$newsId = $news->id();
-
-				if(isset($this->FILES['newsimage']['tmp_name']) && strlen($this->FILES['profile_avatar']['tmp_name'])) {
+				if(isset($this->FILES['newsimage']['tmp_name']) && strlen($this->FILES['newsimage']['tmp_name'])) {
 					$newsImageFile = new Image($this->FILES['newsimage']['tmp_name'], 150, 150, null, 'avatars');
-
 					$newsimagealt = $this->POST['newsimagealt'];
 					$newsimagedescription = $this->POST['newsimagedescription'];
 

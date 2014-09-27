@@ -106,12 +106,15 @@ class FormViewhelper extends BaseViewhelper {
 		return $content;
 	}
 
-	private function dataSelect($arg, $uid, $data) {
+	private function dataSelect($content, $attributes, $data) {
 		$uidList = array();
+		if(isset($attributes['empty'])) {
+			$uidList[0] = $attributes['empty'];
+		}
 		foreach($data as $entry) {
 			$uidList[$entry->uid] = $entry->title;
 		}
-		$countrySelect = $this->renderSelect($uidList, $uid, 'data');
+		$countrySelect = $this->renderSelect($uidList, null, 'data');
 
 		return $countrySelect;
 	}

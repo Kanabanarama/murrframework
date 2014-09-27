@@ -339,6 +339,13 @@ class TemplateView extends BaseView
 
 		return $localizedDate;
 	}
+
+	public function getDatetimeLocalized($strDate) {
+		$date = new DateTime($strDate);
+		$localizedDate = $date->format('d.m.Y H:i');
+
+		return $localizedDate;
+	}
 }
 
 ?>
