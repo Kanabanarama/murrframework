@@ -78,15 +78,15 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `image_forum` text NOT NULL,
   `country` int(11) NOT NULL,
   `gender` int(11) NOT NULL,
-  `birthday` date NOT NULL,
+  `birthday` date DEFAULT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 INSERT INTO `d00eea23`.`profile`
 (`uid`, `updated`, `created`, `parent_user`, `description`, `image_profile`, `image_forum`, `country`, `gender`, `birthday`)
 VALUES
-(NULL, NOW(), NOW(), 1, '[b]42[/b]', '', '', '', 1, '0000-00-00'),
-(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 2, '<h1>test</h1>\r\n[b]test[/b]', '', '', '', 1, '0000-00-00');
+(NULL, NOW(), NOW(), 1, '[b]42[/b]', '', '', '', 1, NOW()),
+(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 2, '<h1>test</h1>\r\n[b]test[/b]', '', '', '', 1, '1986-08-29');
 
 --
 -- Table structure for table `content`
