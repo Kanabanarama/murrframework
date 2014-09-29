@@ -13,7 +13,8 @@
 
 class Logger {
 	public static function log($line) {
-		if(($line != '') && defined(_LOGFILE)) {
+		if(($line != '') && defined('_LOGFILE')) {
+
 			$fh = fopen(_LOGFILE, 'a');
 			fwrite($fh,date('Y-m-d H:i:s').' - '.$line."\n");
 			fclose($fh);

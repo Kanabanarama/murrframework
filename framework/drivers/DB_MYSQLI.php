@@ -75,7 +75,7 @@ class DB_MYSQLI
 			$result = $resource;
 		}
 
-		if($result === false) {
+		if(_DEBUG && $result === false) {
 			echo('ERROR: '.$this->formatStatement($statement));
 		}
 

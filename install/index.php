@@ -36,7 +36,7 @@ class Installer
 
 		$aErrors = array(
 			'db' => 'Datenbankstruktur konnte nicht erstellt werden.',
-			'dir' => 'Upload folder konnten nicht erstellt werden. Bitte erstelle den Ordner application/uploads mit den Rechten 777, rufe install erneut auf und gebe dem Ordner danach wieder die Rechte 755!'
+			'dir' => 'Upload folder konnten nicht erstellt werden. Bitte weise den Ordnern application und application/uploads die Rechte 777 zu, rufe install erneut auf und gebe dem Ordner danach wieder die Rechte 755!'
 		);
 
 		$progress = '';
@@ -106,6 +106,7 @@ class Installer
 
 	private function createUploadFolders() {
 		$aFolders = array(
+			'logs' => ROOT_DIR.'application/logs/errors',
 			'uploads' => ROOT_DIR.'application/uploads',
 			'images' => ROOT_DIR.'application/uploads/images',
 			'profileimages' => ROOT_DIR.'application/uploads/images/avatars',
@@ -114,8 +115,8 @@ class Installer
 
 		$bResult = true;
 		foreach($aFolders as $folder) {
-			if(!is_dir($folder) && mkdir($folder, 0755) !== true) {
-				$bResult = $bResult && true;
+			if(!is_dir($folder) && @mkdir($folder, 0755) !== true) {
+				$bResult = $bResult && false;
 			}
 		}
 

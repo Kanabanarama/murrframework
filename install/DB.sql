@@ -62,7 +62,7 @@ INSERT IGNORE INTO `d00eea23`.`user` (
 )
 VALUES
 (NULL , NOW( ) , NOW( ) , 'admin',  '5f4dcc3b5aa765d61d8327deb882cf99',  'install',  '1',  '2', NULL ,  '',  'Administrator',  '',  'kana@bookpile.net', 'en', NULL, NULL, NOW( )),
-(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 'Kana', '75f03325b6915e6b8cf928874e354496', 'install', '1', '-1', '70gkqlm0pud8a2shde3bb9n1r2', '', '', '', 'kanabanarama@googlemail.com', 'de', 'kana-noir@hotmail.de', NULL, '2014-07-13 20:35:22');
+(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 'Kana', '75f03325b6915e6b8cf928874e354496', 'install', '1', '1', '70gkqlm0pud8a2shde3bb9n1r2', '', '', '', 'kanabanarama@googlemail.com', 'de', 'kana-noir@hotmail.de', NULL, '2014-07-13 20:35:22');
 
 --
 -- Table structure for table `profile`
@@ -79,14 +79,15 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `country` int(11) NOT NULL,
   `gender` int(11) NOT NULL,
   `birthday` date DEFAULT NULL,
-  PRIMARY KEY (`uid`)
+  PRIMARY KEY (`uid`),
+  FOREIGN KEY(parent_user) REFERENCES user(uid)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 INSERT INTO `d00eea23`.`profile`
 (`uid`, `updated`, `created`, `parent_user`, `description`, `image_profile`, `image_forum`, `country`, `gender`, `birthday`)
 VALUES
 (NULL, NOW(), NOW(), 1, '[b]42[/b]', '', '', '', 1, NOW()),
-(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 2, '<h1>test</h1>\r\n[b]test[/b]', '', '', '', 1, '1986-08-29');
+(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 2, '[b]We\''re all mad here![/b]', 'uploads/images/avatars/1c9ffa9f193a3c2f27eb7cc56a9f5af3.png', '', '', 0, '1986-08-29');
 
 --
 -- Table structure for table `content`
@@ -169,12 +170,13 @@ CREATE TABLE IF NOT EXISTS `booktitle_translation` (
   `uid` int(11) unsigned NOT NULL auto_increment,
   `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `parent_book` int(11) unsigned NOT NULL,
+  `parent_booktitle` int(11) unsigned NOT NULL,
   `title` text NOT NULL,
   `language` int(11) unsigned NULL,
   `image` text NOT NULL,
   `link` text NOT NULL,
-  PRIMARY KEY (`uid`)
+  PRIMARY KEY (`uid`),
+  FOREIGN KEY(parent_booktitle) REFERENCES booktitle(uid)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `bookedition` (
@@ -214,7 +216,8 @@ CREATE TABLE IF NOT EXISTS `booklistentry` (
   `progress` smallint(6) NULL,
   `score` tinyint(4) NULL,
   PRIMARY KEY (`uid`),
-  UNIQUE KEY `noduplicates` (`parent_booklist`,`booktitle`)
+  UNIQUE KEY `noduplicates` (`parent_booklist`,`booktitle`),
+  FOREIGN KEY(parent_booklist) REFERENCES booklist(uid)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `rank` (

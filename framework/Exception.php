@@ -82,6 +82,7 @@ function renderError($oError) {
 		require_once(ROOT_DIR . 'framework/predef/templates/error.htm');
 	} else {
 		Logger::log($message.' ('.$location.')');
+		Router::_404();
 	}
 
 	exit;
