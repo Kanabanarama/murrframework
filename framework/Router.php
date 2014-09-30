@@ -93,6 +93,7 @@ class Router
 		} else if(!self::$bProhibitRouting) {
 			header('Location: /' . BASE_DIR . trim($strLocation, '/'));
 		}
+		exit;
 	}
 
 	public static function _404() {

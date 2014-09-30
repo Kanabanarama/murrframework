@@ -23,6 +23,48 @@ class BackendController extends BaseController
 		if($loginstatus === true && $user->privileges >= 1) {
 			$this->view = new TemplateView('backend.htm');
 
+
+			if(isset($this->POST['formaction']) && $this->POST['formaction'] === 'filesdelete') {
+				$filesToDelete = $this->POST['imageselect'];
+				foreach($filesToDelete as $fileToDelete) {
+					if(file_exists($fileToDelete) && is_writable($fileToDelete)) {
+						unlink($fileToDelete);
+					}
+				}
+			}
+
+			/*$directory = "application/uploads/images/";
+			if ($handle = opendir($directory)) {
+				while (false !== ($file = readdir($handle))) {
+					if ($file != '.' && $file != '..' && !is_dir($directory.$file)) {
+						echo "$file\n";
+						$result = unlink($directory.$file);
+						echo($result);
+					}
+				}
+				closedir($handle);
+			}*/
+
+			$directory = "application/uploads/images/*/";
+			$templatePath = '../uploads/images/avatars/';
+			$images = glob("" . $directory . "*.png");
+			if($images) {
+				$images = array_slice($images, 0, 20);
+				$imagePaths = array();
+				foreach($images as $image) {
+					//$result = unlink($image);
+					//var_dump($result);
+					$imagePaths[] = array(
+						'realpath' => $image,
+						'relpath' => $templatePath.basename($image)
+					);
+				}
+				$this->view->set('images', $imagePaths);
+			}
+			$this->view->publish($this);
+
+
+
 			if(isset($this->POST['formaction']) && $this->POST['formaction'] === 'newsdelete') {
 				$entryUid = intval($this->POST['newsuid']);
 				$newsToDelete = OrmModel::get(TBL_NEWS)
