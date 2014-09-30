@@ -57,7 +57,7 @@ class BackendController extends BaseController
 				$publicationDate = $this->POST['publicationdate'];
 				$publish = isset($this->POST['newspublished']) ? true : false;
 
-				if(isset($this->POST['newsuid'])) {
+				if($this->POST['newsuid']) {
 					$entryUid = intval($this->POST['newsuid']);
 					if($entryUid !== 0) {
 						$newsToEdit = OrmModel::get(TBL_NEWS)
@@ -78,6 +78,11 @@ class BackendController extends BaseController
 					$news->published = $publish;
 					$news->parent_user  = $userId;
 					$resultNews = $news->save();
+					if($resultNews) {
+						$this->messages[] = 'News wurden erstellt.';
+					} else {
+						$this->errors[] = 'Fehler beim Erstellen der News.';
+					}
 					$newsId = $news->id();
 				}
 

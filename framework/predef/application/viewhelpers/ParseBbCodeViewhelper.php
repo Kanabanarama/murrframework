@@ -22,7 +22,7 @@ class ParseBbCodeViewhelper extends BaseViewhelper {
 		$strText = preg_replace("/\[email=(.*)\](.*)\[\/email\]/Usi", "<a href=\"mailto:\\1\">\\2</a>", $strText);
 		$strText = preg_replace("/\[img\](.*)\[\/img\]/Usi", '<img src="\\1">', $strText);
 
-		return nl2br($strText);
+		return stripslashes(nl2br($strText));
 	}
 
 }
