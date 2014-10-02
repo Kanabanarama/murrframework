@@ -98,7 +98,8 @@ class Router
 
 	public static function _404() {
 		if(!self::$bProhibitRouting) {
-			header('Location: ' . 'framework/predef/templates/404.htm');
+			// TODO: display via DefaultTemplateDelivery?
+			header('Location: ' . BASE_DIR.'framework/predef/templates/404.htm');
 		}
 	}
 

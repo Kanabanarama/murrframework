@@ -23,7 +23,7 @@ class UriViewhelper extends BaseViewhelper {
 				//$strManipulatedText = str_replace($search, $replace, strtolower(trim($strManipulatedText)));
 				$strManipulatedText = str_replace(' ', '-', mb_strtolower(trim($strManipulatedText)));
 				//$strManipulatedText = preg_replace('/[^äöüéàè0-9a-z-]/i', '', $strManipulatedText);
-				$strManipulatedText = preg_replace('/[^\w-\.]/u', '', $strManipulatedText);
+				$strManipulatedText = preg_replace('/[^\w-\.\,]/u', '', $strManipulatedText);
 				$strManipulatedText = urlencode($strManipulatedText);
 				break;
 			default:

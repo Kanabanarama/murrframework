@@ -29,7 +29,11 @@ class DefaultTemplateDeliveryController extends BaseController
 		if($htmlpage->templateFileExists()) {
 			$htmlpage->publish($this);
 		} else {
-			throw new Exception('There was no dedicated controller and no bypass template found!<br />(The path for the bypass template is "'.TEMPLATE_DIR.$this->strTemplate.'")', 3);
+			if(_DEBUG) {
+				throw new Exception('There was no dedicated controller and no bypass template found!<br />(The path for the bypass template is "'.TEMPLATE_DIR.$this->strTemplate.'")', 3);
+			} else {
+				Router::_404();
+			}
 		}
 	}
 }
