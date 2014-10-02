@@ -48,7 +48,7 @@ class Installer
 			}
 		}
 
-		$staticdir = '/' . BASE_DIR . 'framework/predef/templates/';
+		$staticdir = BASE_DIR . 'framework/predef/templates/';
 
 		require_once('install.htm');
 	}

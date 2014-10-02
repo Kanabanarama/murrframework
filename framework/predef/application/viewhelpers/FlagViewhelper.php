@@ -38,7 +38,7 @@ class FlagViewhelper extends BaseViewhelper {
 		}
 
 		if(!$strFlagIconLocation) {
-			$strFlagIconLocation = '/'.BASE_DIR.str_replace(ROOT_DIR, '', STATIC_DIR).'gfx/flags/';
+			$strFlagIconLocation = BASE_DIR.str_replace(ROOT_DIR, '', STATIC_DIR).'gfx/flags/';
 		}
 		$flagImageUrl = $strFlagIconLocation.$flagImage;
 

@@ -21,7 +21,7 @@ if (version_compare(PHP_VERSION, '5.3') < 0) {
 
 // TODO: contants into config manager?
 $root  = str_replace(DIRECTORY_SEPARATOR, '/', substr(__DIR__, 0, strpos(__DIR__, 'framework')));
-$base = str_replace(DIRECTORY_SEPARATOR, '/', substr($root, strlen($_SERVER['DOCUMENT_ROOT'])));
+$base = '/'.str_replace(DIRECTORY_SEPARATOR, '/', substr($root, strlen($_SERVER['DOCUMENT_ROOT'])));
 define('ROOT_DIR', $root);
 define('BASE_DIR', $base);
 define('DOMAIN', 'http://'.$_SERVER['HTTP_HOST'] . '/');
