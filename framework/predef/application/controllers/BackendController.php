@@ -61,6 +61,23 @@ class BackendController extends BaseController
 				}
 				$this->view->set('images', $imagePaths);
 			}
+
+			if(isset($this->POST['formaction']) && $this->POST['formaction'] === 'logsclear') {
+				$logsToClear = 'application/logs/errors/error.log';
+				if(file_exists($logsToClear) && is_writable($logsToClear)) {
+					unlink($logsToClear);
+				}
+			}
+
+			$directory = "application/logs/*/";
+			$logs = glob("" . $directory . "*.log");
+			if(count($logs)) {
+				if(file_exists($logs[0])) {
+					$logLines = file($logs[0]);
+					$this->view->set('loglines', $logLines);
+				}
+			}
+
 			$this->view->publish($this);
 
 
