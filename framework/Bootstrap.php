@@ -24,7 +24,7 @@ $root  = str_replace(DIRECTORY_SEPARATOR, '/', substr(__DIR__, 0, strpos(__DIR__
 $base = '/'.str_replace(DIRECTORY_SEPARATOR, '/', substr($root, strlen($_SERVER['DOCUMENT_ROOT'])));
 define('ROOT_DIR', $root);
 define('BASE_DIR', $base);
-define('DOMAIN', 'http://'.$_SERVER['HTTP_HOST'] . '/');
+define('DOMAIN', 'http://'.$_SERVER['HTTP_HOST']);
 
 define('MVCBASE_DIR',		ROOT_DIR . 'framework/mvcbase/');
 

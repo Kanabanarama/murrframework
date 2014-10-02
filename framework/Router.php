@@ -40,7 +40,7 @@ class Router
 			$_SERVER['REQUEST_URI'] // Path and query string
 		);
 
-		$strCurrentSubdir = dirname($_SERVER["PHP_SELF"]);
+		$strCurrentSubdir = (dirname($_SERVER["PHP_SELF"]) === '/') ? '' : dirname($_SERVER["PHP_SELF"]);
 		$strPathWithoutSubdir = substr($aUrlVars['path'], strlen($strCurrentSubdir), strlen($aUrlVars['path']));
 		$aPath = explode("/", substr($strPathWithoutSubdir, 1));
 
@@ -60,7 +60,7 @@ class Router
 			$strSubject = urldecode($strSubject);
 			$strAction = urldecode($strAction);
 			$strParams = urldecode($strParams);
-			// Wenn gültige Pfad-Syntax, Router-Objekt instanzieren			
+			// Wenn gültige Pfad-Syntax, Router-Objekt instanzieren
 			$routerInstance = new self($strController, $strSubject, $strAction, $strParams);
 			$routerInstance->dispatch();
 		} else {
@@ -91,7 +91,7 @@ class Router
 		if(strpos($strLocation, 'http://') === 0 || strpos($strLocation, 'https://') === 0) {
 			header('Location: ' . $strLocation);
 		} else if(!self::$bProhibitRouting) {
-			header('Location: /' . BASE_DIR . trim($strLocation, '/'));
+			header('Location: ' . BASE_DIR . trim($strLocation, '/'));
 		}
 		exit;
 	}

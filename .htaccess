@@ -1,13 +1,5 @@
 AddDefaultCharset UTF-8
-
-# development secured area
-#AuthName "bookpile"
-#AuthType Basic
-#AuthUserFile /relaunch/.htpasswd
-#require valid-user
-
 IndexIgnore *
-
 RewriteEngine on
 
 # dotfiles (.htaccess, .git...)

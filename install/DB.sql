@@ -87,7 +87,7 @@ INSERT INTO `d00eea23`.`profile`
 (`uid`, `updated`, `created`, `parent_user`, `description`, `image_profile`, `image_forum`, `country`, `gender`, `birthday`)
 VALUES
 (NULL, NOW(), NOW(), 1, '[b]42[/b]', '', '', '', 1, NOW()),
-(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 2, '[b]We\''re all mad here![/b]', 'uploads/images/avatars/1c9ffa9f193a3c2f27eb7cc56a9f5af3.png', '', '', 0, '1986-08-29');
+(NULL, '2014-06-26 02:11:26', '2014-06-26 02:11:26', 2, '[b]We\'re all mad here![/b]', 'uploads/images/avatars/1c9ffa9f193a3c2f27eb7cc56a9f5af3.png', '', '', 0, '1986-08-29');
 
 --
 -- Table structure for table `content`
