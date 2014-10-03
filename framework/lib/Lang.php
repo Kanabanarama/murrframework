@@ -61,7 +61,6 @@ class Lang
 	public function lall() {
 		$path = 'lang[@key="'.$this->language.'"]/translation';
 		$nodes = $this->langXml->xpath($path);
-
 		$langArray = array();
 		foreach($nodes as $i => $val){
 			$key = (string)$nodes[$i]->attributes()->key;

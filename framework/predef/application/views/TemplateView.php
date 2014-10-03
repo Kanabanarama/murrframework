@@ -104,8 +104,11 @@ class TemplateView extends BaseView
 			extract(self::$aWidgets);
 		}
 
-		//echo($this->langManager->l('footer.about'));
-		//$L = create_function('$key', 'return $this->langManager->l($key);');
+		// extract lang array into template
+		$templateLanguage = Registry::load('language');
+		if($templateLanguage) {
+			$this->langManager->setLanguage(Registry::load('language'));
+		}
 		$L = $this->langManager->lall();
 		extract($L);
 

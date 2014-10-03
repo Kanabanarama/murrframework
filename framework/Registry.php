@@ -48,7 +48,7 @@ abstract class Registry
 	public static function load($index) {
 		if(isset($_SESSION['reg'][$index])) {
 			$mValue = $_SESSION['reg'][$index];
-			unset($_SESSION['reg'][$index]);
+			//unset($_SESSION['reg'][$index]);
 			return $mValue;
 		} else {
 			return null;
